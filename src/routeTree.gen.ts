@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as InstitutionalRouteImport } from './routes/institutional'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 
 const ResourcesRoute = ResourcesRouteImport.update({
@@ -29,6 +30,11 @@ const InstitutionalRoute = InstitutionalRouteImport.update({
   path: '/institutional',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRoute
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/institutional' | '/platform' | '/resources'
+  fullPaths: '/' | '/app' | '/institutional' | '/platform' | '/resources'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/institutional' | '/platform' | '/resources'
-  id: '__root__' | '/' | '/institutional' | '/platform' | '/resources'
+  to: '/' | '/app' | '/institutional' | '/platform' | '/resources'
+  id: '__root__' | '/' | '/app' | '/institutional' | '/platform' | '/resources'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRoute
   InstitutionalRoute: typeof InstitutionalRoute
   PlatformRoute: typeof PlatformRoute
   ResourcesRoute: typeof ResourcesRoute
@@ -92,6 +102,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InstitutionalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRoute,
   InstitutionalRoute: InstitutionalRoute,
   PlatformRoute: PlatformRoute,
   ResourcesRoute: ResourcesRoute,
