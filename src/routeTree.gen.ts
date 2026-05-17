@@ -13,14 +13,19 @@ import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as InstitutionalRouteImport } from './routes/institutional'
 import { Route as AppRouteImport } from './routes/app'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AppTutorRouteImport } from './routes/app.tutor'
 import { Route as AppQuizzesRouteImport } from './routes/app.quizzes'
 import { Route as AppPlannerRouteImport } from './routes/app.planner'
 import { Route as AppNotesRouteImport } from './routes/app.notes'
 import { Route as AppFocusRouteImport } from './routes/app.focus'
 import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
+import { Route as AdminEngagementRouteImport } from './routes/admin.engagement'
+import { Route as AdminContentRouteImport } from './routes/admin.content'
+import { Route as AdminAdoptionRouteImport } from './routes/admin.adoption'
 
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
@@ -42,6 +47,11 @@ const AppRoute = AppRouteImport.update({
   path: '/app',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -51,6 +61,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
 } as any)
 const AppTutorRoute = AppTutorRouteImport.update({
   id: '/tutor',
@@ -82,19 +97,39 @@ const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
   path: '/analytics',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminEngagementRoute = AdminEngagementRouteImport.update({
+  id: '/engagement',
+  path: '/engagement',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminContentRoute = AdminContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdoptionRoute = AdminAdoptionRouteImport.update({
+  id: '/adoption',
+  path: '/adoption',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
+  '/admin/adoption': typeof AdminAdoptionRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/focus': typeof AppFocusRoute
   '/app/notes': typeof AppNotesRoute
   '/app/planner': typeof AppPlannerRoute
   '/app/quizzes': typeof AppQuizzesRoute
   '/app/tutor': typeof AppTutorRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -102,43 +137,57 @@ export interface FileRoutesByTo {
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
+  '/admin/adoption': typeof AdminAdoptionRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/focus': typeof AppFocusRoute
   '/app/notes': typeof AppNotesRoute
   '/app/planner': typeof AppPlannerRoute
   '/app/quizzes': typeof AppQuizzesRoute
   '/app/tutor': typeof AppTutorRoute
+  '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
+  '/admin/adoption': typeof AdminAdoptionRoute
+  '/admin/content': typeof AdminContentRoute
+  '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/focus': typeof AppFocusRoute
   '/app/notes': typeof AppNotesRoute
   '/app/planner': typeof AppPlannerRoute
   '/app/quizzes': typeof AppQuizzesRoute
   '/app/tutor': typeof AppTutorRoute
+  '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/app'
     | '/institutional'
     | '/platform'
     | '/resources'
+    | '/admin/adoption'
+    | '/admin/content'
+    | '/admin/engagement'
     | '/app/analytics'
     | '/app/focus'
     | '/app/notes'
     | '/app/planner'
     | '/app/quizzes'
     | '/app/tutor'
+    | '/admin/'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -146,31 +195,41 @@ export interface FileRouteTypes {
     | '/institutional'
     | '/platform'
     | '/resources'
+    | '/admin/adoption'
+    | '/admin/content'
+    | '/admin/engagement'
     | '/app/analytics'
     | '/app/focus'
     | '/app/notes'
     | '/app/planner'
     | '/app/quizzes'
     | '/app/tutor'
+    | '/admin'
     | '/app'
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/app'
     | '/institutional'
     | '/platform'
     | '/resources'
+    | '/admin/adoption'
+    | '/admin/content'
+    | '/admin/engagement'
     | '/app/analytics'
     | '/app/focus'
     | '/app/notes'
     | '/app/planner'
     | '/app/quizzes'
     | '/app/tutor'
+    | '/admin/'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   InstitutionalRoute: typeof InstitutionalRoute
   PlatformRoute: typeof PlatformRoute
@@ -207,6 +266,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -220,6 +286,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/app/'
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
     }
     '/app/tutor': {
       id: '/app/tutor'
@@ -263,8 +336,45 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAnalyticsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/engagement': {
+      id: '/admin/engagement'
+      path: '/engagement'
+      fullPath: '/admin/engagement'
+      preLoaderRoute: typeof AdminEngagementRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/content': {
+      id: '/admin/content'
+      path: '/content'
+      fullPath: '/admin/content'
+      preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/adoption': {
+      id: '/admin/adoption'
+      path: '/adoption'
+      fullPath: '/admin/adoption'
+      preLoaderRoute: typeof AdminAdoptionRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminAdoptionRoute: typeof AdminAdoptionRoute
+  AdminContentRoute: typeof AdminContentRoute
+  AdminEngagementRoute: typeof AdminEngagementRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdoptionRoute: AdminAdoptionRoute,
+  AdminContentRoute: AdminContentRoute,
+  AdminEngagementRoute: AdminEngagementRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AppRouteChildren {
   AppAnalyticsRoute: typeof AppAnalyticsRoute
@@ -290,6 +400,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   InstitutionalRoute: InstitutionalRoute,
   PlatformRoute: PlatformRoute,
