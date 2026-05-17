@@ -14,6 +14,13 @@ import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as InstitutionalRouteImport } from './routes/institutional'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppTutorRouteImport } from './routes/app.tutor'
+import { Route as AppQuizzesRouteImport } from './routes/app.quizzes'
+import { Route as AppPlannerRouteImport } from './routes/app.planner'
+import { Route as AppNotesRouteImport } from './routes/app.notes'
+import { Route as AppFocusRouteImport } from './routes/app.focus'
+import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
 
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
@@ -40,40 +47,131 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppTutorRoute = AppTutorRouteImport.update({
+  id: '/tutor',
+  path: '/tutor',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppQuizzesRoute = AppQuizzesRouteImport.update({
+  id: '/quizzes',
+  path: '/quizzes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPlannerRoute = AppPlannerRouteImport.update({
+  id: '/planner',
+  path: '/planner',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotesRoute = AppNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFocusRoute = AppFocusRouteImport.update({
+  id: '/focus',
+  path: '/focus',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/focus': typeof AppFocusRoute
+  '/app/notes': typeof AppNotesRoute
+  '/app/planner': typeof AppPlannerRoute
+  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/tutor': typeof AppTutorRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/focus': typeof AppFocusRoute
+  '/app/notes': typeof AppNotesRoute
+  '/app/planner': typeof AppPlannerRoute
+  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/tutor': typeof AppTutorRoute
+  '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/app': typeof AppRoute
+  '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
   '/resources': typeof ResourcesRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/focus': typeof AppFocusRoute
+  '/app/notes': typeof AppNotesRoute
+  '/app/planner': typeof AppPlannerRoute
+  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/tutor': typeof AppTutorRoute
+  '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/app' | '/institutional' | '/platform' | '/resources'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/institutional'
+    | '/platform'
+    | '/resources'
+    | '/app/analytics'
+    | '/app/focus'
+    | '/app/notes'
+    | '/app/planner'
+    | '/app/quizzes'
+    | '/app/tutor'
+    | '/app/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/app' | '/institutional' | '/platform' | '/resources'
-  id: '__root__' | '/' | '/app' | '/institutional' | '/platform' | '/resources'
+  to:
+    | '/'
+    | '/institutional'
+    | '/platform'
+    | '/resources'
+    | '/app/analytics'
+    | '/app/focus'
+    | '/app/notes'
+    | '/app/planner'
+    | '/app/quizzes'
+    | '/app/tutor'
+    | '/app'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/institutional'
+    | '/platform'
+    | '/resources'
+    | '/app/analytics'
+    | '/app/focus'
+    | '/app/notes'
+    | '/app/planner'
+    | '/app/quizzes'
+    | '/app/tutor'
+    | '/app/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRoute
+  AppRoute: typeof AppRouteWithChildren
   InstitutionalRoute: typeof InstitutionalRoute
   PlatformRoute: typeof PlatformRoute
   ResourcesRoute: typeof ResourcesRoute
@@ -116,12 +214,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/tutor': {
+      id: '/app/tutor'
+      path: '/tutor'
+      fullPath: '/app/tutor'
+      preLoaderRoute: typeof AppTutorRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/quizzes': {
+      id: '/app/quizzes'
+      path: '/quizzes'
+      fullPath: '/app/quizzes'
+      preLoaderRoute: typeof AppQuizzesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/planner': {
+      id: '/app/planner'
+      path: '/planner'
+      fullPath: '/app/planner'
+      preLoaderRoute: typeof AppPlannerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/notes': {
+      id: '/app/notes'
+      path: '/notes'
+      fullPath: '/app/notes'
+      preLoaderRoute: typeof AppNotesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/focus': {
+      id: '/app/focus'
+      path: '/focus'
+      fullPath: '/app/focus'
+      preLoaderRoute: typeof AppFocusRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/analytics': {
+      id: '/app/analytics'
+      path: '/analytics'
+      fullPath: '/app/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppFocusRoute: typeof AppFocusRoute
+  AppNotesRoute: typeof AppNotesRoute
+  AppPlannerRoute: typeof AppPlannerRoute
+  AppQuizzesRoute: typeof AppQuizzesRoute
+  AppTutorRoute: typeof AppTutorRoute
+  AppIndexRoute: typeof AppIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppAnalyticsRoute: AppAnalyticsRoute,
+  AppFocusRoute: AppFocusRoute,
+  AppNotesRoute: AppNotesRoute,
+  AppPlannerRoute: AppPlannerRoute,
+  AppQuizzesRoute: AppQuizzesRoute,
+  AppTutorRoute: AppTutorRoute,
+  AppIndexRoute: AppIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AppRoute: AppRoute,
+  AppRoute: AppRouteWithChildren,
   InstitutionalRoute: InstitutionalRoute,
   PlatformRoute: PlatformRoute,
   ResourcesRoute: ResourcesRoute,
