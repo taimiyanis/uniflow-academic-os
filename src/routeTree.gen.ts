@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResourcesRouteImport } from './routes/resources'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PlatformRouteImport } from './routes/platform'
 import { Route as InstitutionalRouteImport } from './routes/institutional'
 import { Route as AppRouteImport } from './routes/app'
@@ -22,14 +23,25 @@ import { Route as AppQuizzesRouteImport } from './routes/app.quizzes'
 import { Route as AppPlannerRouteImport } from './routes/app.planner'
 import { Route as AppNotesRouteImport } from './routes/app.notes'
 import { Route as AppFocusRouteImport } from './routes/app.focus'
+import { Route as AppExamRouteImport } from './routes/app.exam'
 import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
 import { Route as AdminEngagementRouteImport } from './routes/admin.engagement'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminAdoptionRouteImport } from './routes/admin.adoption'
+import { Route as AppExamIndexRouteImport } from './routes/app.exam.index'
+import { Route as AppQuizzesDeckIdRouteImport } from './routes/app.quizzes.$deckId'
+import { Route as AppNotesNoteIdRouteImport } from './routes/app.notes.$noteId'
+import { Route as AppExamExamIdRouteImport } from './routes/app.exam.$examId'
+import { Route as AppCoursesCodeRouteImport } from './routes/app.courses.$code'
 
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
   path: '/resources',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PlatformRoute = PlatformRouteImport.update({
@@ -92,6 +104,11 @@ const AppFocusRoute = AppFocusRouteImport.update({
   path: '/focus',
   getParentRoute: () => AppRoute,
 } as any)
+const AppExamRoute = AppExamRouteImport.update({
+  id: '/exam',
+  path: '/exam',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -112,6 +129,31 @@ const AdminAdoptionRoute = AdminAdoptionRouteImport.update({
   path: '/adoption',
   getParentRoute: () => AdminRoute,
 } as any)
+const AppExamIndexRoute = AppExamIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppExamRoute,
+} as any)
+const AppQuizzesDeckIdRoute = AppQuizzesDeckIdRouteImport.update({
+  id: '/$deckId',
+  path: '/$deckId',
+  getParentRoute: () => AppQuizzesRoute,
+} as any)
+const AppNotesNoteIdRoute = AppNotesNoteIdRouteImport.update({
+  id: '/$noteId',
+  path: '/$noteId',
+  getParentRoute: () => AppNotesRoute,
+} as any)
+const AppExamExamIdRoute = AppExamExamIdRouteImport.update({
+  id: '/$examId',
+  path: '/$examId',
+  getParentRoute: () => AppExamRoute,
+} as any)
+const AppCoursesCodeRoute = AppCoursesCodeRouteImport.update({
+  id: '/courses/$code',
+  path: '/courses/$code',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -119,35 +161,48 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
+  '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
+  '/app/exam': typeof AppExamRouteWithChildren
   '/app/focus': typeof AppFocusRoute
-  '/app/notes': typeof AppNotesRoute
+  '/app/notes': typeof AppNotesRouteWithChildren
   '/app/planner': typeof AppPlannerRoute
-  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/quizzes': typeof AppQuizzesRouteWithChildren
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/courses/$code': typeof AppCoursesCodeRoute
+  '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/notes/$noteId': typeof AppNotesNoteIdRoute
+  '/app/quizzes/$deckId': typeof AppQuizzesDeckIdRoute
+  '/app/exam/': typeof AppExamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
+  '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/focus': typeof AppFocusRoute
-  '/app/notes': typeof AppNotesRoute
+  '/app/notes': typeof AppNotesRouteWithChildren
   '/app/planner': typeof AppPlannerRoute
-  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/quizzes': typeof AppQuizzesRouteWithChildren
   '/app/tutor': typeof AppTutorRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/app/courses/$code': typeof AppCoursesCodeRoute
+  '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/notes/$noteId': typeof AppNotesNoteIdRoute
+  '/app/quizzes/$deckId': typeof AppQuizzesDeckIdRoute
+  '/app/exam': typeof AppExamIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -156,18 +211,25 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
   '/platform': typeof PlatformRoute
+  '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
+  '/app/exam': typeof AppExamRouteWithChildren
   '/app/focus': typeof AppFocusRoute
-  '/app/notes': typeof AppNotesRoute
+  '/app/notes': typeof AppNotesRouteWithChildren
   '/app/planner': typeof AppPlannerRoute
-  '/app/quizzes': typeof AppQuizzesRoute
+  '/app/quizzes': typeof AppQuizzesRouteWithChildren
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/courses/$code': typeof AppCoursesCodeRoute
+  '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/notes/$noteId': typeof AppNotesNoteIdRoute
+  '/app/quizzes/$deckId': typeof AppQuizzesDeckIdRoute
+  '/app/exam/': typeof AppExamIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -177,11 +239,13 @@ export interface FileRouteTypes {
     | '/app'
     | '/institutional'
     | '/platform'
+    | '/pricing'
     | '/resources'
     | '/admin/adoption'
     | '/admin/content'
     | '/admin/engagement'
     | '/app/analytics'
+    | '/app/exam'
     | '/app/focus'
     | '/app/notes'
     | '/app/planner'
@@ -189,11 +253,17 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin/'
     | '/app/'
+    | '/app/courses/$code'
+    | '/app/exam/$examId'
+    | '/app/notes/$noteId'
+    | '/app/quizzes/$deckId'
+    | '/app/exam/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/institutional'
     | '/platform'
+    | '/pricing'
     | '/resources'
     | '/admin/adoption'
     | '/admin/content'
@@ -206,6 +276,11 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin'
     | '/app'
+    | '/app/courses/$code'
+    | '/app/exam/$examId'
+    | '/app/notes/$noteId'
+    | '/app/quizzes/$deckId'
+    | '/app/exam'
   id:
     | '__root__'
     | '/'
@@ -213,11 +288,13 @@ export interface FileRouteTypes {
     | '/app'
     | '/institutional'
     | '/platform'
+    | '/pricing'
     | '/resources'
     | '/admin/adoption'
     | '/admin/content'
     | '/admin/engagement'
     | '/app/analytics'
+    | '/app/exam'
     | '/app/focus'
     | '/app/notes'
     | '/app/planner'
@@ -225,6 +302,11 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin/'
     | '/app/'
+    | '/app/courses/$code'
+    | '/app/exam/$examId'
+    | '/app/notes/$noteId'
+    | '/app/quizzes/$deckId'
+    | '/app/exam/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -233,6 +315,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   InstitutionalRoute: typeof InstitutionalRoute
   PlatformRoute: typeof PlatformRoute
+  PricingRoute: typeof PricingRoute
   ResourcesRoute: typeof ResourcesRoute
 }
 
@@ -243,6 +326,13 @@ declare module '@tanstack/react-router' {
       path: '/resources'
       fullPath: '/resources'
       preLoaderRoute: typeof ResourcesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/platform': {
@@ -329,6 +419,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFocusRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/exam': {
+      id: '/app/exam'
+      path: '/exam'
+      fullPath: '/app/exam'
+      preLoaderRoute: typeof AppExamRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/analytics': {
       id: '/app/analytics'
       path: '/analytics'
@@ -357,6 +454,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdoptionRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/app/exam/': {
+      id: '/app/exam/'
+      path: '/'
+      fullPath: '/app/exam/'
+      preLoaderRoute: typeof AppExamIndexRouteImport
+      parentRoute: typeof AppExamRoute
+    }
+    '/app/quizzes/$deckId': {
+      id: '/app/quizzes/$deckId'
+      path: '/$deckId'
+      fullPath: '/app/quizzes/$deckId'
+      preLoaderRoute: typeof AppQuizzesDeckIdRouteImport
+      parentRoute: typeof AppQuizzesRoute
+    }
+    '/app/notes/$noteId': {
+      id: '/app/notes/$noteId'
+      path: '/$noteId'
+      fullPath: '/app/notes/$noteId'
+      preLoaderRoute: typeof AppNotesNoteIdRouteImport
+      parentRoute: typeof AppNotesRoute
+    }
+    '/app/exam/$examId': {
+      id: '/app/exam/$examId'
+      path: '/$examId'
+      fullPath: '/app/exam/$examId'
+      preLoaderRoute: typeof AppExamExamIdRouteImport
+      parentRoute: typeof AppExamRoute
+    }
+    '/app/courses/$code': {
+      id: '/app/courses/$code'
+      path: '/courses/$code'
+      fullPath: '/app/courses/$code'
+      preLoaderRoute: typeof AppCoursesCodeRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -376,24 +508,65 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AppExamRouteChildren {
+  AppExamExamIdRoute: typeof AppExamExamIdRoute
+  AppExamIndexRoute: typeof AppExamIndexRoute
+}
+
+const AppExamRouteChildren: AppExamRouteChildren = {
+  AppExamExamIdRoute: AppExamExamIdRoute,
+  AppExamIndexRoute: AppExamIndexRoute,
+}
+
+const AppExamRouteWithChildren =
+  AppExamRoute._addFileChildren(AppExamRouteChildren)
+
+interface AppNotesRouteChildren {
+  AppNotesNoteIdRoute: typeof AppNotesNoteIdRoute
+}
+
+const AppNotesRouteChildren: AppNotesRouteChildren = {
+  AppNotesNoteIdRoute: AppNotesNoteIdRoute,
+}
+
+const AppNotesRouteWithChildren = AppNotesRoute._addFileChildren(
+  AppNotesRouteChildren,
+)
+
+interface AppQuizzesRouteChildren {
+  AppQuizzesDeckIdRoute: typeof AppQuizzesDeckIdRoute
+}
+
+const AppQuizzesRouteChildren: AppQuizzesRouteChildren = {
+  AppQuizzesDeckIdRoute: AppQuizzesDeckIdRoute,
+}
+
+const AppQuizzesRouteWithChildren = AppQuizzesRoute._addFileChildren(
+  AppQuizzesRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppExamRoute: typeof AppExamRouteWithChildren
   AppFocusRoute: typeof AppFocusRoute
-  AppNotesRoute: typeof AppNotesRoute
+  AppNotesRoute: typeof AppNotesRouteWithChildren
   AppPlannerRoute: typeof AppPlannerRoute
-  AppQuizzesRoute: typeof AppQuizzesRoute
+  AppQuizzesRoute: typeof AppQuizzesRouteWithChildren
   AppTutorRoute: typeof AppTutorRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppCoursesCodeRoute: typeof AppCoursesCodeRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAnalyticsRoute: AppAnalyticsRoute,
+  AppExamRoute: AppExamRouteWithChildren,
   AppFocusRoute: AppFocusRoute,
-  AppNotesRoute: AppNotesRoute,
+  AppNotesRoute: AppNotesRouteWithChildren,
   AppPlannerRoute: AppPlannerRoute,
-  AppQuizzesRoute: AppQuizzesRoute,
+  AppQuizzesRoute: AppQuizzesRouteWithChildren,
   AppTutorRoute: AppTutorRoute,
   AppIndexRoute: AppIndexRoute,
+  AppCoursesCodeRoute: AppCoursesCodeRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
@@ -404,18 +577,9 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   InstitutionalRoute: InstitutionalRoute,
   PlatformRoute: PlatformRoute,
+  PricingRoute: PricingRoute,
   ResourcesRoute: ResourcesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

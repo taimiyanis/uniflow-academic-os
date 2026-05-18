@@ -1,135 +1,111 @@
-# UNIFLOW — Build Plan
+# UNIFLOW — Full Upgrade Plan
 
-A premium, calm, institutional academic operating system. Visual direction locked to **Institutional Minimalism** (Plus Jakarta Sans + JetBrains Mono, blue #315EFB on #F8FAFC, soft layered cards, generous whitespace, restrained motion).
+A complete pass that turns the current shell into a demo-ready academic OS. All work stays frontend-only with mock data, in the locked Institutional Minimalism direction.
 
-## Scope (frontend-only, no backend yet)
+## A. Design polish
 
-Static, fully designed product surfaces with mock data. No auth, no database. Built so we can wire Lovable Cloud later without refactoring.
+1. **Global ⌘K command palette** (`src/components/app/CommandPalette.tsx`) — built on shadcn `command` + `dialog`. Opens with ⌘K / Ctrl+K. Sections: Navigate, Create (note, deck, focus session, exam plan), Recent notes, Switch course, Ask AI tutor. Mounted in `app.tsx` layout.
+2. **Dashboard home redesign** (`app.index.tsx`) — replace generic grid with a "Today" narrative:
+   - Hero "next action" card (one decision, one CTA, contextual reason)
+   - Exam countdown strip (3 closest exams, horizontal)
+   - 3 modules: Today's plan · Recall queue · Recent notes
+3. **Motion pass** (`src/lib/motion.ts`) — shared variants. Staggered list reveals, KPI count-up hook (`useCountUp`), sliding sidebar active indicator (framer-motion `layoutId`).
+4. **Empty/loading states** — skeleton shimmer component (`src/components/ui/skeleton-card.tsx`) used in Notes, Quizzes, Analytics. Each empty surface gets an illustration block + one CTA.
+5. **Inline sparklines** (`src/components/charts/Sparkline.tsx`) — pure SVG. Used in sidebar courses, KPI stat cards, course detail.
+6. **Dark mode** — extend `src/styles.css` with `.dark` tokens. Toggle in topbar (sun/moon). Persisted via `localStorage` + `prefers-color-scheme` fallback.
 
-## Routes
+## B. New flagship features
+
+7. **Exam Prep mode** (`app.exam.tsx` + `app.exam.$examId.tsx`) — list of upcoming exams with predicted readiness ring; detail view shows day-by-day study plan (mixed lectures review, flashcard sets, mock quiz), weak-topic radar, "start today's session" CTA.
+8. **SRS Flashcards** (upgrade `app.quizzes.tsx` + new `app.quizzes.$deckId.tsx`) — deck library page + dedicated review session UI: front/back card flip (framer-motion), "Again / Hard / Good / Easy" buttons, queue progress bar, session summary screen with streak.
+9. **Smart Notes editor** (`app.notes.$noteId.tsx`) — two-pane layout: contenteditable markdown-style editor left, AI side-panel right with actions (Summarize, Generate flashcards, Find related, Ask about selection). Backlinks footer.
+10. **Course detail hub** (`app.courses.$code.tsx`) — per-course page: syllabus accordion, linked notes, decks, upcoming deadlines, performance mini-charts, course-scoped tutor entry.
+11. **AI Tutor conversational UI** (rebuild `app.tutor.tsx`) — left rail thread list, center message thread with role bubbles, citations to user's notes, action chips ("Turn into flashcards", "Add to plan"). Mocked streaming via setTimeout token append.
+12. **Onboarding flow** (`onboarding.tsx`, layout-less) — 4 steps: School → Program → Courses → Syllabus upload. Progress bar, framer-motion step transitions, finishes by routing to `/app`.
+
+## C. Institutional admin depth
+
+13. **Cohort drill-down** (`admin.cohort.$facultyId.tsx`) — click adoption bar → faculty page with student list table, at-risk segment, intervention queue.
+14. **At-risk module** (`admin.atrisk.tsx`) — segmented list: declining engagement, low recall, missed deadlines. Each row: student, signals, recommended action.
+15. **Export buttons** — header action on each admin route (PDF / CSV). Mocked via toast confirmation.
+
+## D. Marketing site upgrades
+
+16. **Interactive product tour** on `/platform` — tabbed switcher (Notes / Tutor / Quizzes / Analytics) with animated mock previews.
+17. **Pricing page** (`pricing.tsx`) — Student (free) / Student+ / Institution tiers with feature matrix.
+18. **Resources/changelog** — populate `/resources` with 5 dated entries (semantic article markup).
+
+## Routing summary (new files)
 
 ```
 src/routes/
-  __root.tsx              Shared shell, head meta, fonts
-  index.tsx               Marketing landing
-  platform.tsx            Product features deep-dive
-  institutional.tsx       Pitch page for universities
-  resources.tsx           Editorial / changelog placeholder
-  app.tsx                 Student dashboard layout (sidebar + outlet)
-  app.index.tsx           Dashboard home
-  app.notes.tsx           Smart Notes
-  app.tutor.tsx           AI Tutor
-  app.quizzes.tsx         Quizzes & Flashcards
-  app.planner.tsx         Planner & tasks
-  app.focus.tsx           Focus mode
-  app.analytics.tsx       Personal performance
-  admin.tsx               Admin layout (separate sidebar)
-  admin.index.tsx         Institutional analytics overview
-  admin.engagement.tsx    Student engagement
-  admin.content.tsx       Content moderation
-  admin.adoption.tsx      Adoption tracking
+  onboarding.tsx
+  pricing.tsx
+  app.exam.tsx
+  app.exam.$examId.tsx
+  app.quizzes.$deckId.tsx
+  app.notes.$noteId.tsx
+  app.courses.$code.tsx
+  admin.atrisk.tsx
+  admin.cohort.$facultyId.tsx
 ```
 
-Each route gets its own `head()` with unique title + description + og tags.
+Plus sidebar updates to surface Exam, Courses; admin sidebar updates to surface At-risk.
 
-## Design system (`src/styles.css`)
-
-Replace default tokens with the locked palette in oklch:
-
-- `--background` #F8FAFC, `--foreground` #111827
-- `--primary` #315EFB, `--primary-foreground` white
-- `--accent` #EEF2FF (primary-soft)
-- `--muted` #64748B, `--border` #E2E8F0
-- `--radius` 1rem (medium-large)
-- Fonts: Plus Jakarta Sans (display), JetBrains Mono (eyebrows/labels) loaded via `<link>` in `__root.tsx` head
-- Custom shadows: soft layered (`shadow-elegant`, `shadow-card`)
-- Keyframes: `fade-in-up`, `u-draw` from the prototype
-
-## Components
+## New components
 
 ```
 src/components/
-  brand/UniflowLogo.tsx           Structured U mark (SVG, scalable)
-  marketing/
-    SiteHeader.tsx                Sticky nav, blur backdrop
-    SiteFooter.tsx
-    Hero.tsx                      Eyebrow pill + headline + dashboard preview
-    DashboardPreview.tsx          The locked hero mock
-    TrustBar.tsx                  Institution wordmarks
-    FeatureGrid.tsx               3-up feature cards
-    FeatureSection.tsx            Alternating image+text rows for /platform
-    TestimonialRow.tsx
-    InstitutionalCTA.tsx          Dark CTA card
-  app/
-    AppSidebar.tsx                Shadcn sidebar, collapsible icon
-    AppTopbar.tsx                 Breadcrumb + command-K hint + avatar
-    widgets/StudySessionCard.tsx
-    widgets/WeeklyGoalCard.tsx
-    widgets/ExamCountdownCard.tsx
-    widgets/SmartNotesList.tsx
-    widgets/UpcomingList.tsx
-    widgets/ProgressRing.tsx
-    widgets/CourseCard.tsx
-  admin/
-    AdminSidebar.tsx
-    widgets/EngagementChart.tsx   Recharts area chart
-    widgets/AdoptionBars.tsx
-    widgets/KPIStat.tsx
-    widgets/CohortHeatmap.tsx     CSS grid heatmap
+  app/CommandPalette.tsx
+  app/widgets/NextActionCard.tsx
+  app/widgets/ExamCountdownStrip.tsx
+  app/widgets/RecallQueueCard.tsx
+  app/widgets/TodayPlanCard.tsx
+  app/widgets/ReadinessRing.tsx
+  app/widgets/WeakTopicRadar.tsx
+  app/flashcards/ReviewSession.tsx
+  app/flashcards/Flashcard.tsx
+  app/notes/NoteEditor.tsx
+  app/notes/AISidePanel.tsx
+  app/tutor/ThreadList.tsx
+  app/tutor/MessageThread.tsx
+  charts/Sparkline.tsx
+  charts/CountUp.tsx
+  ui/skeleton-card.tsx
+  ui/theme-toggle.tsx
+  marketing/ProductTour.tsx
+  marketing/PricingTable.tsx
+  admin/widgets/AtRiskTable.tsx
 ```
 
-Reuse shadcn primitives (button, card, badge, tabs, table, progress, separator, tooltip). Charts via `recharts` (already shipped via `@/components/ui/chart`).
+## Mock data
 
-## Landing page composition (locked from prototype)
+Create `src/data/` with `courses.ts`, `notes.ts`, `decks.ts`, `exams.ts`, `tutor-threads.ts`, `admin.ts`. All UI reads from these so swapping to real fetches later is trivial.
 
-1. Sticky header — UniflowLogo, Platform / Institutional / Resources, Sign In + Get Access
-2. Hero — eyebrow pill, oversized headline "Academic clarity for modern students.", subhead, primary + ghost CTA
-3. Dashboard Preview — exact composition from selected prototype (sidebar + main + smart notes column)
-4. Trust bar — 4 institution wordmarks, grayscale
-5. Feature grid — 3 cards (AI Tutor, Smart Organization, Institutional Analytics)
-6. Feature section rows — Smart Notes, Quizzes & Flashcards, Focus Mode, Performance Analytics (alternating image/text, 4 rows)
-7. Testimonial row — 3 quiet quote cards
-8. Institutional CTA — dark rounded panel
-9. Footer — minimal, mono caps
+## Technical details
 
-## Student dashboard (`/app`)
+- **Theme tokens**: `src/styles.css` gains `.dark` with shifted oklch lightness (`--background` ≈ `oklch(0.16 0.02 264)`, `--card` slightly lighter, primary kept saturated). All components already use semantic tokens, so no component edits needed.
+- **Command palette**: `cmdk` is shipped with shadcn `command.tsx`. Global keyboard listener registered in `app.tsx` via `useEffect`.
+- **Motion**: `framer-motion` already installed. Centralize variants in `src/lib/motion.ts`.
+- **Editor**: plain `contentEditable` div with basic markdown shortcuts — no heavyweight editor lib. Keep it visual.
+- **Tutor streaming**: simulate token-by-token append via `setInterval` over a canned response string.
+- **Sparkline**: SVG `<polyline>`, no chart lib needed.
+- **SEO**: every new route gets distinct `head()` with title/description/og.
 
-- Left sidebar (Dashboard, My Courses, Notes, AI Tutor, Quizzes, Planner, Focus, Analytics) — Uniflow+ pro pill at bottom
-- Topbar with breadcrumb and ⌘K
-- Dashboard home: welcome line, exam countdown card, course progress ring, AI tutor promo card, this-week tasks, courses grid (replicates the uploaded screenshot's information density but in the locked institutional minimalism style)
-- Each sub-route gets a real, designed page (not "coming soon") with mock data
-
-## University admin dashboard (`/admin`)
-
-- Separate sidebar, slightly denser
-- Overview: KPI stats (active students, weekly engagement, content views, completion rate), engagement area chart, adoption bars by faculty, cohort heatmap, recent flagged content
-- Enterprise tone: more data, more density, neutral palette, primary used sparingly
-
-## Motion
-
-- `fade-in-up` on section reveal (intersection observer hook or framer-motion `whileInView`)
-- Hover: card lift `translate-y-[-2px]` + shadow deepen
-- Sidebar item active state with primary-soft background
-- No parallax, no scroll-jacking
-
-## SEO
-
-- Per-route head() with distinct title/description/og
-- Single H1 per page
-- Semantic landmarks (header, nav, main, footer)
-
-## Out of scope (this build)
+## Out of scope
 
 - Auth, Lovable Cloud, persistence
-- Functional AI tutor / quiz generation
-- Real charts data (mock arrays only)
-- Mobile-first polish — desktop-first per brief, mobile gets a reasonable fallback
+- Real AI calls (all tutor/summarize responses are canned)
+- Real file upload in onboarding (preview UI only)
+- Mobile-first polish — desktop-first per brief
 
-## Technical notes
+## Order of build
 
-- All colors via semantic tokens — no raw hex in components
-- Logo: pure SVG component, animated `u-draw` on first paint
-- Mock data lives in `src/data/*.ts` so swapping to real fetches later is trivial
-- Add `framer-motion` for reveal animations
+1. Tokens + dark mode + motion lib + skeleton + sparkline
+2. Command palette + dashboard redesign + sidebar/topbar polish
+3. SRS flashcards + Notes editor + Course detail
+4. Exam Prep + AI Tutor rebuild + Onboarding
+5. Admin at-risk + cohort + exports
+6. Marketing: product tour + pricing + resources
 
 Click **Implement plan** to build.
