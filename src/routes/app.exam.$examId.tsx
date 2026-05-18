@@ -1,12 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowLeft, BookOpen, Layers, Sparkles, Play, Clock } from "lucide-react";
-import { exams } from "@/data/exams";
+import { exams, type Exam } from "@/data/exams";
 import { fadeUp, stagger } from "@/lib/motion";
 
 export const Route = createFileRoute("/app/exam/$examId")({
   head: ({ params }) => ({ meta: [{ title: `Exam plan — Uniflow` }, { name: "description", content: `Day-by-day plan for exam ${params.examId}` }] }),
-  loader: ({ params }) => {
+  loader: ({ params }): Exam => {
     const exam = exams.find((e) => e.id === params.examId);
     if (!exam) throw notFound();
     return exam;
