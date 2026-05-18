@@ -22,10 +22,13 @@ import { Route as AppQuizzesRouteImport } from './routes/app.quizzes'
 import { Route as AppPlannerRouteImport } from './routes/app.planner'
 import { Route as AppNotesRouteImport } from './routes/app.notes'
 import { Route as AppFocusRouteImport } from './routes/app.focus'
+import { Route as AppExamRouteImport } from './routes/app.exam'
 import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
 import { Route as AdminEngagementRouteImport } from './routes/admin.engagement'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminAdoptionRouteImport } from './routes/admin.adoption'
+import { Route as AppExamIndexRouteImport } from './routes/app.exam.index'
+import { Route as AppExamExamIdRouteImport } from './routes/app.exam.$examId'
 
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
@@ -92,6 +95,11 @@ const AppFocusRoute = AppFocusRouteImport.update({
   path: '/focus',
   getParentRoute: () => AppRoute,
 } as any)
+const AppExamRoute = AppExamRouteImport.update({
+  id: '/exam',
+  path: '/exam',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
   id: '/analytics',
   path: '/analytics',
@@ -112,6 +120,16 @@ const AdminAdoptionRoute = AdminAdoptionRouteImport.update({
   path: '/adoption',
   getParentRoute: () => AdminRoute,
 } as any)
+const AppExamIndexRoute = AppExamIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppExamRoute,
+} as any)
+const AppExamExamIdRoute = AppExamExamIdRouteImport.update({
+  id: '/$examId',
+  path: '/$examId',
+  getParentRoute: () => AppExamRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +142,7 @@ export interface FileRoutesByFullPath {
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
+  '/app/exam': typeof AppExamRouteWithChildren
   '/app/focus': typeof AppFocusRoute
   '/app/notes': typeof AppNotesRoute
   '/app/planner': typeof AppPlannerRoute
@@ -131,6 +150,8 @@ export interface FileRoutesByFullPath {
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/exam/': typeof AppExamIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -148,6 +169,8 @@ export interface FileRoutesByTo {
   '/app/tutor': typeof AppTutorRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/exam': typeof AppExamIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -161,6 +184,7 @@ export interface FileRoutesById {
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
+  '/app/exam': typeof AppExamRouteWithChildren
   '/app/focus': typeof AppFocusRoute
   '/app/notes': typeof AppNotesRoute
   '/app/planner': typeof AppPlannerRoute
@@ -168,6 +192,8 @@ export interface FileRoutesById {
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/exam/': typeof AppExamIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -182,6 +208,7 @@ export interface FileRouteTypes {
     | '/admin/content'
     | '/admin/engagement'
     | '/app/analytics'
+    | '/app/exam'
     | '/app/focus'
     | '/app/notes'
     | '/app/planner'
@@ -189,6 +216,8 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin/'
     | '/app/'
+    | '/app/exam/$examId'
+    | '/app/exam/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -206,6 +235,8 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin'
     | '/app'
+    | '/app/exam/$examId'
+    | '/app/exam'
   id:
     | '__root__'
     | '/'
@@ -218,6 +249,7 @@ export interface FileRouteTypes {
     | '/admin/content'
     | '/admin/engagement'
     | '/app/analytics'
+    | '/app/exam'
     | '/app/focus'
     | '/app/notes'
     | '/app/planner'
@@ -225,6 +257,8 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin/'
     | '/app/'
+    | '/app/exam/$examId'
+    | '/app/exam/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -329,6 +363,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFocusRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/exam': {
+      id: '/app/exam'
+      path: '/exam'
+      fullPath: '/app/exam'
+      preLoaderRoute: typeof AppExamRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/analytics': {
       id: '/app/analytics'
       path: '/analytics'
@@ -357,6 +398,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdoptionRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/app/exam/': {
+      id: '/app/exam/'
+      path: '/'
+      fullPath: '/app/exam/'
+      preLoaderRoute: typeof AppExamIndexRouteImport
+      parentRoute: typeof AppExamRoute
+    }
+    '/app/exam/$examId': {
+      id: '/app/exam/$examId'
+      path: '/$examId'
+      fullPath: '/app/exam/$examId'
+      preLoaderRoute: typeof AppExamExamIdRouteImport
+      parentRoute: typeof AppExamRoute
+    }
   }
 }
 
@@ -376,8 +431,22 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AppExamRouteChildren {
+  AppExamExamIdRoute: typeof AppExamExamIdRoute
+  AppExamIndexRoute: typeof AppExamIndexRoute
+}
+
+const AppExamRouteChildren: AppExamRouteChildren = {
+  AppExamExamIdRoute: AppExamExamIdRoute,
+  AppExamIndexRoute: AppExamIndexRoute,
+}
+
+const AppExamRouteWithChildren =
+  AppExamRoute._addFileChildren(AppExamRouteChildren)
+
 interface AppRouteChildren {
   AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppExamRoute: typeof AppExamRouteWithChildren
   AppFocusRoute: typeof AppFocusRoute
   AppNotesRoute: typeof AppNotesRoute
   AppPlannerRoute: typeof AppPlannerRoute
@@ -388,6 +457,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAnalyticsRoute: AppAnalyticsRoute,
+  AppExamRoute: AppExamRouteWithChildren,
   AppFocusRoute: AppFocusRoute,
   AppNotesRoute: AppNotesRoute,
   AppPlannerRoute: AppPlannerRoute,
@@ -409,3 +479,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
