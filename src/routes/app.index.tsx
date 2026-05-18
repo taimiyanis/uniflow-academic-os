@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Clock, Flame, TrendingUp, Sparkles, Play, GraduationCap, Calendar, NotebookPen } from "lucide-react";
+import { Clock, Flame, TrendingUp, Sparkles, Play, GraduationCap, Calendar, NotebookPen } from "lucide-react";
 import { fadeUp, stagger } from "@/lib/motion";
 import { CountUp } from "@/components/charts/CountUp";
 import { Sparkline } from "@/components/charts/Sparkline";
@@ -205,5 +205,3 @@ function ReadinessRing({ pct, label }: { pct: number; label: string }) {
   );
 }
 
-// Keep ArrowUpRight import used
-void ArrowUpRight;
