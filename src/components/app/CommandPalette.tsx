@@ -28,8 +28,13 @@ export function CommandPalette() {
         setOpen((o) => !o);
       }
     };
+    const openEvt = () => setOpen(true);
     window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
+    window.addEventListener("uniflow:open-palette", openEvt);
+    return () => {
+      window.removeEventListener("keydown", handler);
+      window.removeEventListener("uniflow:open-palette", openEvt);
+    };
   }, []);
 
   const go = (to: string) => {
