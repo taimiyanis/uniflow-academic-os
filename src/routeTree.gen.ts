@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ResourcesRouteImport } from './routes/resources'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PlatformRouteImport } from './routes/platform'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as InstitutionalRouteImport } from './routes/institutional'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -27,12 +28,14 @@ import { Route as AppExamRouteImport } from './routes/app.exam'
 import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
 import { Route as AdminEngagementRouteImport } from './routes/admin.engagement'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
+import { Route as AdminAtriskRouteImport } from './routes/admin.atrisk'
 import { Route as AdminAdoptionRouteImport } from './routes/admin.adoption'
 import { Route as AppExamIndexRouteImport } from './routes/app.exam.index'
 import { Route as AppQuizzesDeckIdRouteImport } from './routes/app.quizzes.$deckId'
 import { Route as AppNotesNoteIdRouteImport } from './routes/app.notes.$noteId'
 import { Route as AppExamExamIdRouteImport } from './routes/app.exam.$examId'
 import { Route as AppCoursesCodeRouteImport } from './routes/app.courses.$code'
+import { Route as AdminCohortFacultyIdRouteImport } from './routes/admin.cohort.$facultyId'
 
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
@@ -47,6 +50,11 @@ const PricingRoute = PricingRouteImport.update({
 const PlatformRoute = PlatformRouteImport.update({
   id: '/platform',
   path: '/platform',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InstitutionalRoute = InstitutionalRouteImport.update({
@@ -124,6 +132,11 @@ const AdminContentRoute = AdminContentRouteImport.update({
   path: '/content',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminAtriskRoute = AdminAtriskRouteImport.update({
+  id: '/atrisk',
+  path: '/atrisk',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAdoptionRoute = AdminAdoptionRouteImport.update({
   id: '/adoption',
   path: '/adoption',
@@ -154,16 +167,23 @@ const AppCoursesCodeRoute = AppCoursesCodeRouteImport.update({
   path: '/courses/$code',
   getParentRoute: () => AppRoute,
 } as any)
+const AdminCohortFacultyIdRoute = AdminCohortFacultyIdRouteImport.update({
+  id: '/cohort/$facultyId',
+  path: '/cohort/$facultyId',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
+  '/onboarding': typeof OnboardingRoute
   '/platform': typeof PlatformRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
+  '/admin/atrisk': typeof AdminAtriskRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
@@ -175,6 +195,7 @@ export interface FileRoutesByFullPath {
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/cohort/$facultyId': typeof AdminCohortFacultyIdRoute
   '/app/courses/$code': typeof AppCoursesCodeRoute
   '/app/exam/$examId': typeof AppExamExamIdRoute
   '/app/notes/$noteId': typeof AppNotesNoteIdRoute
@@ -184,10 +205,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/institutional': typeof InstitutionalRoute
+  '/onboarding': typeof OnboardingRoute
   '/platform': typeof PlatformRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
+  '/admin/atrisk': typeof AdminAtriskRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
@@ -198,6 +221,7 @@ export interface FileRoutesByTo {
   '/app/tutor': typeof AppTutorRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
+  '/admin/cohort/$facultyId': typeof AdminCohortFacultyIdRoute
   '/app/courses/$code': typeof AppCoursesCodeRoute
   '/app/exam/$examId': typeof AppExamExamIdRoute
   '/app/notes/$noteId': typeof AppNotesNoteIdRoute
@@ -210,10 +234,12 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/app': typeof AppRouteWithChildren
   '/institutional': typeof InstitutionalRoute
+  '/onboarding': typeof OnboardingRoute
   '/platform': typeof PlatformRoute
   '/pricing': typeof PricingRoute
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
+  '/admin/atrisk': typeof AdminAtriskRoute
   '/admin/content': typeof AdminContentRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
@@ -225,6 +251,7 @@ export interface FileRoutesById {
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
+  '/admin/cohort/$facultyId': typeof AdminCohortFacultyIdRoute
   '/app/courses/$code': typeof AppCoursesCodeRoute
   '/app/exam/$examId': typeof AppExamExamIdRoute
   '/app/notes/$noteId': typeof AppNotesNoteIdRoute
@@ -238,10 +265,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/institutional'
+    | '/onboarding'
     | '/platform'
     | '/pricing'
     | '/resources'
     | '/admin/adoption'
+    | '/admin/atrisk'
     | '/admin/content'
     | '/admin/engagement'
     | '/app/analytics'
@@ -253,6 +282,7 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin/'
     | '/app/'
+    | '/admin/cohort/$facultyId'
     | '/app/courses/$code'
     | '/app/exam/$examId'
     | '/app/notes/$noteId'
@@ -262,10 +292,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/institutional'
+    | '/onboarding'
     | '/platform'
     | '/pricing'
     | '/resources'
     | '/admin/adoption'
+    | '/admin/atrisk'
     | '/admin/content'
     | '/admin/engagement'
     | '/app/analytics'
@@ -276,6 +308,7 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin'
     | '/app'
+    | '/admin/cohort/$facultyId'
     | '/app/courses/$code'
     | '/app/exam/$examId'
     | '/app/notes/$noteId'
@@ -287,10 +320,12 @@ export interface FileRouteTypes {
     | '/admin'
     | '/app'
     | '/institutional'
+    | '/onboarding'
     | '/platform'
     | '/pricing'
     | '/resources'
     | '/admin/adoption'
+    | '/admin/atrisk'
     | '/admin/content'
     | '/admin/engagement'
     | '/app/analytics'
@@ -302,6 +337,7 @@ export interface FileRouteTypes {
     | '/app/tutor'
     | '/admin/'
     | '/app/'
+    | '/admin/cohort/$facultyId'
     | '/app/courses/$code'
     | '/app/exam/$examId'
     | '/app/notes/$noteId'
@@ -314,6 +350,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   AppRoute: typeof AppRouteWithChildren
   InstitutionalRoute: typeof InstitutionalRoute
+  OnboardingRoute: typeof OnboardingRoute
   PlatformRoute: typeof PlatformRoute
   PricingRoute: typeof PricingRoute
   ResourcesRoute: typeof ResourcesRoute
@@ -340,6 +377,13 @@ declare module '@tanstack/react-router' {
       path: '/platform'
       fullPath: '/platform'
       preLoaderRoute: typeof PlatformRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/institutional': {
@@ -447,6 +491,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminContentRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/atrisk': {
+      id: '/admin/atrisk'
+      path: '/atrisk'
+      fullPath: '/admin/atrisk'
+      preLoaderRoute: typeof AdminAtriskRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/adoption': {
       id: '/admin/adoption'
       path: '/adoption'
@@ -489,21 +540,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppCoursesCodeRouteImport
       parentRoute: typeof AppRoute
     }
+    '/admin/cohort/$facultyId': {
+      id: '/admin/cohort/$facultyId'
+      path: '/cohort/$facultyId'
+      fullPath: '/admin/cohort/$facultyId'
+      preLoaderRoute: typeof AdminCohortFacultyIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
   AdminAdoptionRoute: typeof AdminAdoptionRoute
+  AdminAtriskRoute: typeof AdminAtriskRoute
   AdminContentRoute: typeof AdminContentRoute
   AdminEngagementRoute: typeof AdminEngagementRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminCohortFacultyIdRoute: typeof AdminCohortFacultyIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAdoptionRoute: AdminAdoptionRoute,
+  AdminAtriskRoute: AdminAtriskRoute,
   AdminContentRoute: AdminContentRoute,
   AdminEngagementRoute: AdminEngagementRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminCohortFacultyIdRoute: AdminCohortFacultyIdRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -576,6 +638,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   AppRoute: AppRouteWithChildren,
   InstitutionalRoute: InstitutionalRoute,
+  OnboardingRoute: OnboardingRoute,
   PlatformRoute: PlatformRoute,
   PricingRoute: PricingRoute,
   ResourcesRoute: ResourcesRoute,
@@ -583,13 +646,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
