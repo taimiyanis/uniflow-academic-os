@@ -67,7 +67,7 @@ function CohortPage() {
             </div>
             <span className="text-[10px] font-mono uppercase tracking-widest text-primary bg-primary-soft px-2 py-1 rounded">+18% MoM</span>
           </div>
-          <Sparkline data={trend} className="h-48 text-primary" />
+          <Sparkline data={trend} width={600} height={180} className="w-full h-48 text-primary" />
         </div>
 
         <div className="col-span-12 lg:col-span-5 p-7 bg-card border border-border rounded-3xl">
