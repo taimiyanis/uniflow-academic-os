@@ -1,4 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ChevronRight, Download } from "lucide-react";
+import { faculties } from "@/data/admin";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/adoption")({
   head: () => ({ meta: [{ title: "Adoption — Uniflow Institutional" }] }),
@@ -15,9 +18,14 @@ const series = {
 function AdoptionPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      <header>
-        <h1 className="text-3xl font-extrabold tracking-tight">Adoption</h1>
-        <p className="text-sm text-muted-foreground mt-1">Active student counts across the 2025/2026 academic year.</p>
+      <header className="flex items-start justify-between">
+        <div>
+          <h1 className="text-3xl font-extrabold tracking-tight">Adoption</h1>
+          <p className="text-sm text-muted-foreground mt-1">Active student counts across the 2025/2026 academic year.</p>
+        </div>
+        <button onClick={() => toast.success("Adoption report exported")} className="inline-flex items-center gap-2 px-3 py-2 text-xs font-semibold border border-border rounded-lg hover:bg-secondary/60">
+          <Download className="size-3.5" /> Export
+        </button>
       </header>
 
       <div className="p-7 bg-card border border-border rounded-3xl">
@@ -55,6 +63,40 @@ function AdoptionPage() {
             <p className="text-3xl font-extrabold mt-3">{s.value}</p>
           </div>
         ))}
+      </div>
+
+      <div className="p-7 bg-card border border-border rounded-3xl">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-base font-bold">Faculty drill-down</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Click a row to inspect cohort engagement and interventions.</p>
+          </div>
+        </div>
+        <ul className="space-y-2">
+          {faculties.map((f) => (
+            <li key={f.id}>
+              <Link
+                to="/admin/cohort/$facultyId"
+                params={{ facultyId: f.id }}
+                className="flex items-center gap-4 p-4 border border-border rounded-xl hover:bg-secondary/30 hover:border-primary/30 transition-colors group"
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-sm">{f.name}</p>
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{f.students.toLocaleString()} students · {f.atRisk} at-risk</p>
+                </div>
+                <div className="w-48">
+                  <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1">
+                    <span>adoption</span><span className="text-foreground">{f.adoption}%</span>
+                  </div>
+                  <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
+                    <div className="h-full bg-primary" style={{ width: `${f.adoption}%` }} />
+                  </div>
+                </div>
+                <ChevronRight className="size-4 text-muted-foreground group-hover:text-primary" />
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );
