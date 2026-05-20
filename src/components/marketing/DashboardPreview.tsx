@@ -21,10 +21,10 @@ export function DashboardPreview() {
           <aside className="w-60 border-r border-border p-5 bg-secondary/20 hidden lg:flex flex-col">
             <div className="space-y-1">
               <SidebarRow active label="Dashboard" />
-              <SidebarRow label="Smart Notes" />
+              <SidebarRow label="Library" />
+              <SidebarRow label="Practice" />
               <SidebarRow label="AI Tutor" />
               <SidebarRow label="Planner" />
-              <SidebarRow label="Quizzes" />
             </div>
             <div className="pt-5 mt-5 border-t border-border">
               <p className="text-[10px] font-bold text-muted-foreground uppercase mb-3 tracking-widest">Courses</p>
@@ -80,14 +80,18 @@ export function DashboardPreview() {
 
               <div className="col-span-4 p-5 rounded-2xl bg-secondary/40 border border-border">
                 <div className="flex items-center justify-between mb-3.5">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Smart Notes</p>
-                  <p className="text-[10px] font-mono text-primary">view all</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Practice queue</p>
+                  <p className="text-[10px] font-mono text-primary">start</p>
                 </div>
                 <div className="space-y-2.5">
-                  {["Market Equilibrium", "Monetary Policy", "Aggregate Demand"].map((n, i) => (
-                    <div key={n} className="p-3 bg-card border border-border rounded-lg">
-                      <p className="text-xs font-semibold">{n}</p>
-                      <p className="text-[10px] text-muted-foreground mt-1">Updated {i + 1}h ago</p>
+                  {[
+                    { label: "IS-LM flashcards", meta: "15 due" },
+                    { label: "Fiscal expansion exercise", meta: "12 min" },
+                    { label: "2024 mock exam", meta: "120 min" },
+                  ].map((n) => (
+                    <div key={n.label} className="p-3 bg-card border border-border rounded-lg">
+                      <p className="text-xs font-semibold">{n.label}</p>
+                      <p className="text-[10px] text-muted-foreground mt-1">{n.meta}</p>
                     </div>
                   ))}
                 </div>

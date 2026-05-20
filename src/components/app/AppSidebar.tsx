@@ -1,8 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
-  LayoutDashboard, NotebookPen, Sparkles, Layers, CalendarRange,
-  Focus, BarChart3, Crown, GraduationCap, BookOpen,
+  LayoutDashboard, Library, Dumbbell, Sparkles, CalendarRange,
+  Focus, BarChart3, GraduationCap, BookOpen, Building2,
 } from "lucide-react";
 import { UniflowLogo } from "@/components/brand/UniflowLogo";
 import { Sparkline } from "@/components/charts/Sparkline";
@@ -10,13 +10,13 @@ import { courses } from "@/data/courses";
 
 const items = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { to: "/app/notes", label: "Smart Notes", icon: NotebookPen },
-  { to: "/app/tutor", label: "AI Tutor", icon: Sparkles },
-  { to: "/app/quizzes", label: "Quizzes", icon: Layers },
+  { to: "/app/library", label: "Library", icon: Library },
+  { to: "/app/practice", label: "Practice", icon: Dumbbell },
   { to: "/app/exam", label: "Exam Prep", icon: GraduationCap },
+  { to: "/app/tutor", label: "AI Tutor", icon: Sparkles },
   { to: "/app/planner", label: "Planner", icon: CalendarRange },
   { to: "/app/focus", label: "Focus", icon: Focus },
-  { to: "/app/analytics", label: "Analytics", icon: BarChart3 },
+  { to: "/app/analytics", label: "Progress", icon: BarChart3 },
 ];
 
 export function AppSidebar() {
@@ -82,14 +82,12 @@ export function AppSidebar() {
       </nav>
 
       <div className="p-3 border-t border-border">
-        <div className="p-4 rounded-xl bg-foreground text-background relative overflow-hidden">
-          <div className="absolute -top-8 -right-8 size-24 bg-primary/30 rounded-full blur-2xl" />
-          <Crown className="size-4 text-primary mb-2 relative" />
-          <p className="text-sm font-bold relative">Uniflow+</p>
-          <p className="text-[11px] text-background/60 mt-0.5 relative">Unlimited AI tutor & analytics</p>
-          <Link to="/pricing" className="relative mt-3 w-full block text-center text-xs font-bold py-1.5 rounded-md bg-primary text-primary-foreground">
-            Upgrade
-          </Link>
+        <div className="px-3 py-3 rounded-lg bg-secondary/40 flex items-center gap-3">
+          <Building2 className="size-4 text-muted-foreground shrink-0" />
+          <div className="min-w-0">
+            <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">Institution</p>
+            <p className="text-xs font-semibold truncate">ESCP Business School</p>
+          </div>
         </div>
       </div>
     </aside>

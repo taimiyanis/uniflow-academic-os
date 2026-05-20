@@ -9,7 +9,7 @@ export const Route = createFileRoute("/platform")({
   head: () => ({
     meta: [
       { title: "Platform — Uniflow" },
-      { name: "description", content: "Smart notes, AI tutor, quizzes, flashcards, planner, focus mode, and analytics. Every tool a business school student needs." },
+      { name: "description", content: "A faculty-curated library, practice that mirrors the exam, an AI tutor grounded in your syllabus, planner, focus mode, and analytics." },
       { property: "og:title", content: "Platform — Uniflow" },
       { property: "og:description", content: "Every tool a business school student needs, in one calm interface." },
     ],
@@ -19,22 +19,22 @@ export const Route = createFileRoute("/platform")({
 
 const deepDives = [
   {
-    eyebrow: "Smart Notes",
-    title: "Capture every lecture without losing the thread.",
-    body: "A clean block editor that recognizes course concepts, links them across chapters, and surfaces them again when you need a refresher.",
-    points: ["Block-based editor", "Auto-linked concepts", "PDF & slide imports"],
+    eyebrow: "Curated Library",
+    title: "Every lesson, written for your syllabus.",
+    body: "Uniflow's academic team writes each chapter in partnership with your faculty — clean prose, linked concepts, and a clear path through the semester.",
+    points: ["Faculty-reviewed", "Chapter-level concept links", "One canonical reader"],
   },
   {
     eyebrow: "AI Tutor",
     title: "An academic companion, not a chatbot.",
-    body: "Trained on syllabus-grade material. Asks clarifying questions, breaks down case studies, and generates personalized reviews.",
-    points: ["Concept-aware", "Syllabus-trained", "Citations included"],
+    body: "Grounded in the same library you read from. Asks clarifying questions, breaks down case studies, and generates personalized reviews with citations back to the source lesson.",
+    points: ["Library-grounded", "Citations included", "Per-chapter context"],
   },
   {
-    eyebrow: "Quizzes & Flashcards",
-    title: "Active recall, generated in seconds.",
-    body: "Drop in a chapter. Receive spaced-repetition flashcards and full mock exams calibrated to your weak spots.",
-    points: ["Spaced repetition", "Mock exam mode", "Per-concept scoring"],
+    eyebrow: "Practice",
+    title: "Flashcards, quizzes, exercises, mock exams.",
+    body: "Four modes that match how the exam will actually test you — calibrated to your weakest topics and your professor's past papers.",
+    points: ["Spaced repetition", "Worked exercises", "Timed mock exams"],
   },
   {
     eyebrow: "Focus Mode",

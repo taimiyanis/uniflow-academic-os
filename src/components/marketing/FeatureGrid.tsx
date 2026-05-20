@@ -1,9 +1,9 @@
-import { Sparkles, NotebookPen, BarChart3, CalendarRange, Focus, Layers } from "lucide-react";
+import { Sparkles, Library, BarChart3, CalendarRange, Focus, Dumbbell } from "lucide-react";
 
 const features = [
-  { icon: Sparkles, title: "AI Tutor", body: "An intelligent companion trained on your course materials. Personalized quizzes, structured explanations, no fluff." },
-  { icon: NotebookPen, title: "Smart Notes", body: "Capture lectures and case studies in a clean editor that auto-links concepts across your curriculum." },
-  { icon: Layers, title: "Quizzes & Flashcards", body: "Generate active-recall decks and practice exams from any chapter, slide, or PDF in seconds." },
+  { icon: Library, title: "Curated Library", body: "Every lesson, reading, and case for your semester — authored by the Uniflow team in partnership with your faculty." },
+  { icon: Dumbbell, title: "Practice that mirrors the exam", body: "Flashcards, concept quizzes, worked exercises, and full timed mock exams — all calibrated to your weakest topics." },
+  { icon: Sparkles, title: "AI Tutor", body: "An academic companion grounded in your library. Explains a passage, breaks down a case, or runs a personalized review." },
   { icon: CalendarRange, title: "Planner", body: "Deadlines, study sessions, and exam countdowns unified in one calm, actionable view." },
   { icon: Focus, title: "Focus Mode", body: "Pomodoro sessions paired with ambient soundscapes and distraction-blocking. Designed to lower cognitive load." },
   { icon: BarChart3, title: "Performance Analytics", body: "See exactly where you stand in every course — and where to invest your next 30 minutes." },

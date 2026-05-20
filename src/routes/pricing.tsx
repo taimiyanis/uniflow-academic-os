@@ -16,9 +16,9 @@ export const Route = createFileRoute("/pricing")({
 });
 
 const tiers = [
-  { name: "Student", price: "Free", desc: "The essentials for solo study.", cta: "Get started", features: ["Smart Notes", "5 flashcard decks", "20 tutor messages / week", "Focus mode"], featured: false },
-  { name: "Student+", price: "€8", suffix: "/mo", desc: "For students who want every edge.", cta: "Upgrade", features: ["Unlimited decks & notes", "Unlimited AI tutor", "Exam Prep mode", "Performance analytics", "Spaced-repetition tuning"], featured: true },
-  { name: "Institution", price: "Custom", desc: "Deploy across cohorts with governance.", cta: "Talk to sales", features: ["Everything in Student+", "Institutional dashboard", "Cohort analytics & at-risk detection", "SSO & SCIM", "Content governance", "Dedicated success manager"], featured: false },
+  { name: "Institution", price: "Custom", desc: "Licensed per student, deployed across cohorts.", cta: "Talk to sales", features: ["Faculty-curated library", "Practice hub (flashcards, quizzes, exercises, mock exams)", "AI tutor grounded in your syllabus", "Cohort analytics & at-risk detection", "SSO & SCIM", "Dedicated success manager"], featured: true },
+  { name: "Faculty pilot", price: "Free", desc: "Run a one-semester pilot with a single course.", cta: "Start a pilot", features: ["1 course, up to 60 students", "Full library & practice access", "Adoption dashboard", "Onboarding workshop"], featured: false },
+  { name: "Individual", price: "—", desc: "Uniflow is licensed by your institution.", cta: "Coming soon", features: ["Available once your school joins", "Ask your faculty to start a pilot"], featured: false, disabled: true },
 ];
 
 function PricingPage() {
@@ -38,7 +38,7 @@ function PricingPage() {
               <p className={`text-[10px] font-mono uppercase tracking-widest mb-4 ${t.featured ? "text-primary" : "text-muted-foreground"}`}>{t.name}</p>
               <p className="text-4xl font-extrabold tracking-tight">{t.price}<span className={`text-base font-medium ml-1 ${t.featured ? "text-background/60" : "text-muted-foreground"}`}>{t.suffix ?? ""}</span></p>
               <p className={`text-sm mt-2 ${t.featured ? "text-background/70" : "text-muted-foreground"}`}>{t.desc}</p>
-              <Link to="/app" className={`mt-6 w-full block text-center py-2.5 rounded-lg font-semibold text-sm ${t.featured ? "bg-primary text-primary-foreground" : "border border-border hover:bg-secondary/60"}`}>{t.cta}</Link>
+              <Link to="/app" className={`mt-6 w-full block text-center py-2.5 rounded-lg font-semibold text-sm ${t.featured ? "bg-primary text-primary-foreground" : t.disabled ? "border border-border text-muted-foreground pointer-events-none" : "border border-border hover:bg-secondary/60"}`}>{t.cta}</Link>
               <ul className="mt-8 space-y-3">
                 {t.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm">

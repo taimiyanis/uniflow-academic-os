@@ -14,7 +14,7 @@ export const Route = createFileRoute("/resources")({
 
 const posts = [
   { tag: "Research", date: "May 2026", title: "Cognitive load and the modern syllabus", excerpt: "What happens when we treat note-taking as an information architecture problem, not a productivity one." },
-  { tag: "Changelog", date: "April 2026", title: "Uniflow 2.4 — Smart Notes refresh", excerpt: "A faster editor, deeper concept linking, and quieter formatting controls." },
+  { tag: "Changelog", date: "April 2026", title: "Uniflow 2.4 — Library refresh", excerpt: "A faster reader, deeper concept linking, and quieter formatting controls across every lesson." },
   { tag: "Field notes", date: "March 2026", title: "How ESCP BIM piloted Uniflow", excerpt: "Three cohorts, one semester, +14 points on average finals scores." },
   { tag: "Research", date: "February 2026", title: "Designing for academic calm", excerpt: "The five interface principles that guide every screen in Uniflow." },
 ];

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import {
-  Command,
   CommandDialog,
   CommandEmpty,
   CommandGroup,
@@ -11,8 +10,8 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import {
-  LayoutDashboard, NotebookPen, Sparkles, Layers, CalendarRange,
-  Focus, BarChart3, GraduationCap, Plus, BookOpen,
+  LayoutDashboard, Library, Dumbbell, Sparkles, CalendarRange,
+  Focus, BarChart3, GraduationCap, BookOpen, FileText,
 } from "lucide-react";
 import { courses } from "@/data/courses";
 import { notes } from "@/data/notes";
@@ -50,29 +49,20 @@ export function CommandPalette() {
 
         <CommandGroup heading="Navigate">
           <CommandItem onSelect={() => go("/app")}><LayoutDashboard className="size-4" /> Dashboard</CommandItem>
-          <CommandItem onSelect={() => go("/app/notes")}><NotebookPen className="size-4" /> Smart Notes</CommandItem>
-          <CommandItem onSelect={() => go("/app/tutor")}><Sparkles className="size-4" /> AI Tutor</CommandItem>
-          <CommandItem onSelect={() => go("/app/quizzes")}><Layers className="size-4" /> Quizzes</CommandItem>
+          <CommandItem onSelect={() => go("/app/library")}><Library className="size-4" /> Library</CommandItem>
+          <CommandItem onSelect={() => go("/app/practice")}><Dumbbell className="size-4" /> Practice</CommandItem>
           <CommandItem onSelect={() => go("/app/exam")}><GraduationCap className="size-4" /> Exam Prep</CommandItem>
+          <CommandItem onSelect={() => go("/app/tutor")}><Sparkles className="size-4" /> AI Tutor</CommandItem>
           <CommandItem onSelect={() => go("/app/planner")}><CalendarRange className="size-4" /> Planner</CommandItem>
           <CommandItem onSelect={() => go("/app/focus")}><Focus className="size-4" /> Focus</CommandItem>
-          <CommandItem onSelect={() => go("/app/analytics")}><BarChart3 className="size-4" /> Analytics</CommandItem>
+          <CommandItem onSelect={() => go("/app/analytics")}><BarChart3 className="size-4" /> Progress</CommandItem>
         </CommandGroup>
 
         <CommandSeparator />
 
-        <CommandGroup heading="Create">
-          <CommandItem onSelect={() => go("/app/notes")}><Plus className="size-4" /> New note</CommandItem>
-          <CommandItem onSelect={() => go("/app/quizzes")}><Plus className="size-4" /> New flashcard deck</CommandItem>
-          <CommandItem onSelect={() => go("/app/focus")}><Plus className="size-4" /> Start focus session</CommandItem>
-          <CommandItem onSelect={() => go("/app/exam")}><Plus className="size-4" /> Plan an exam</CommandItem>
-        </CommandGroup>
-
-        <CommandSeparator />
-
-        <CommandGroup heading="Switch course">
+        <CommandGroup heading="Courses">
           {courses.map((c) => (
-            <CommandItem key={c.code} onSelect={() => go(`/app/courses/${c.code}`)}>
+            <CommandItem key={c.code} onSelect={() => go(`/app/library/${c.code}`)}>
               <BookOpen className="size-4" />
               <span className="font-mono text-xs text-muted-foreground mr-2">{c.code}</span> {c.name}
             </CommandItem>
@@ -81,10 +71,10 @@ export function CommandPalette() {
 
         <CommandSeparator />
 
-        <CommandGroup heading="Recent notes">
-          {notes.slice(0, 4).map((n) => (
-            <CommandItem key={n.id} onSelect={() => go(`/app/notes/${n.id}`)}>
-              <NotebookPen className="size-4" />
+        <CommandGroup heading="Recent lessons">
+          {notes.slice(0, 5).map((n) => (
+            <CommandItem key={n.id} onSelect={() => go(`/app/library/${n.code}/${n.id}`)}>
+              <FileText className="size-4" />
               <span className="font-mono text-xs text-muted-foreground mr-2">{n.code}</span> {n.title}
             </CommandItem>
           ))}
