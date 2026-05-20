@@ -1,111 +1,137 @@
-# UNIFLOW — Full Upgrade Plan
 
-A complete pass that turns the current shell into a demo-ready academic OS. All work stays frontend-only with mock data, in the locked Institutional Minimalism direction.
+# Repositioning Uniflow: from "student notebook" to "curated academic library"
 
-## A. Design polish
+The current product treats the student as the author (Smart Notes editor, AI side-panel for writing, backlinks). That contradicts the real model: **the university licenses Uniflow, and Uniflow's team authors the course material**. The student consumes, practices, and gets coached — they don't write notes from scratch.
 
-1. **Global ⌘K command palette** (`src/components/app/CommandPalette.tsx`) — built on shadcn `command` + `dialog`. Opens with ⌘K / Ctrl+K. Sections: Navigate, Create (note, deck, focus session, exam plan), Recent notes, Switch course, Ask AI tutor. Mounted in `app.tsx` layout.
-2. **Dashboard home redesign** (`app.index.tsx`) — replace generic grid with a "Today" narrative:
-   - Hero "next action" card (one decision, one CTA, contextual reason)
-   - Exam countdown strip (3 closest exams, horizontal)
-   - 3 modules: Today's plan · Recall queue · Recent notes
-3. **Motion pass** (`src/lib/motion.ts`) — shared variants. Staggered list reveals, KPI count-up hook (`useCountUp`), sliding sidebar active indicator (framer-motion `layoutId`).
-4. **Empty/loading states** — skeleton shimmer component (`src/components/ui/skeleton-card.tsx`) used in Notes, Quizzes, Analytics. Each empty surface gets an illustration block + one CTA.
-5. **Inline sparklines** (`src/components/charts/Sparkline.tsx`) — pure SVG. Used in sidebar courses, KPI stat cards, course detail.
-6. **Dark mode** — extend `src/styles.css` with `.dark` tokens. Toggle in topbar (sun/moon). Persisted via `localStorage` + `prefers-color-scheme` fallback.
+This plan deletes what doesn't fit, restructures navigation around the real value (Library → Practice → Coach → Progress), and rebuilds a calmer, more focused dashboard.
 
-## B. New flagship features
+---
 
-7. **Exam Prep mode** (`app.exam.tsx` + `app.exam.$examId.tsx`) — list of upcoming exams with predicted readiness ring; detail view shows day-by-day study plan (mixed lectures review, flashcard sets, mock quiz), weak-topic radar, "start today's session" CTA.
-8. **SRS Flashcards** (upgrade `app.quizzes.tsx` + new `app.quizzes.$deckId.tsx`) — deck library page + dedicated review session UI: front/back card flip (framer-motion), "Again / Hard / Good / Easy" buttons, queue progress bar, session summary screen with streak.
-9. **Smart Notes editor** (`app.notes.$noteId.tsx`) — two-pane layout: contenteditable markdown-style editor left, AI side-panel right with actions (Summarize, Generate flashcards, Find related, Ask about selection). Backlinks footer.
-10. **Course detail hub** (`app.courses.$code.tsx`) — per-course page: syllabus accordion, linked notes, decks, upcoming deadlines, performance mini-charts, course-scoped tutor entry.
-11. **AI Tutor conversational UI** (rebuild `app.tutor.tsx`) — left rail thread list, center message thread with role bubbles, citations to user's notes, action chips ("Turn into flashcards", "Add to plan"). Mocked streaming via setTimeout token append.
-12. **Onboarding flow** (`onboarding.tsx`, layout-less) — 4 steps: School → Program → Courses → Syllabus upload. Progress bar, framer-motion step transitions, finishes by routing to `/app`.
+## 1. Remove / retire
 
-## C. Institutional admin depth
+- **Smart Notes top-level section** → delete from sidebar, command palette, marketing.
+  - Delete `src/routes/app.notes.tsx`, `src/routes/app.notes.$noteId.tsx`.
+  - Remove `NotebookPen` items from `AppSidebar`, `CommandPalette`, `AppTopbar` labels.
+  - Remove the "Smart Notes" feature card from the marketing `FeatureGrid` / Hero copy.
+- **The "create" shortcuts** in the command palette ("New note", "New flashcard deck") — students don't author content, so these go.
+- **Dashboard clutter** — the current `/app` mixes too many widgets. Cut from ~6 cards to a 3-zone layout (see §4).
 
-13. **Cohort drill-down** (`admin.cohort.$facultyId.tsx`) — click adoption bar → faculty page with student list table, at-risk segment, intervention queue.
-14. **At-risk module** (`admin.atrisk.tsx`) — segmented list: declining engagement, low recall, missed deadlines. Each row: student, signals, recommended action.
-15. **Export buttons** — header action on each admin route (PDF / CSV). Mocked via toast confirmation.
+## 2. Rename & restructure the sidebar
 
-## D. Marketing site upgrades
+New "Workspace" nav (top to bottom):
 
-16. **Interactive product tour** on `/platform` — tabbed switcher (Notes / Tutor / Quizzes / Analytics) with animated mock previews.
-17. **Pricing page** (`pricing.tsx`) — Student (free) / Student+ / Institution tiers with feature matrix.
-18. **Resources/changelog** — populate `/resources` with 5 dated entries (semantic article markup).
-
-## Routing summary (new files)
-
-```
-src/routes/
-  onboarding.tsx
-  pricing.tsx
-  app.exam.tsx
-  app.exam.$examId.tsx
-  app.quizzes.$deckId.tsx
-  app.notes.$noteId.tsx
-  app.courses.$code.tsx
-  admin.atrisk.tsx
-  admin.cohort.$facultyId.tsx
+```text
+Dashboard          — today's plan, exam countdown, next action
+Library            — courses with Uniflow-authored lessons/readings (replaces "Smart Notes")
+Practice           — flashcards, quizzes, exercises, mock exams (single hub)
+Exam Prep          — per-exam readiness, weak topics, plan
+AI Tutor           — conversational coach grounded in the Library
+Planner            — calendar + study blocks
+Focus              — pomodoro / deep work
+Progress           — analytics (renamed from "Analytics" to feel less corporate)
 ```
 
-Plus sidebar updates to surface Exam, Courses; admin sidebar updates to surface At-risk.
+Courses list stays below as a quick-jump section.
 
-## New components
+## 3. New "Practice" hub (replaces standalone `/app/quizzes`)
 
+Single page at `/app/practice` with four tabs powered by Uniflow-authored content:
+
+| Tab | Content type | Existing scaffold to reuse |
+|---|---|---|
+| Flashcards | SRS decks per chapter | `app.quizzes.$deckId.tsx` (rename route to `practice.flashcards.$deckId`) |
+| Quizzes | Timed MCQ sets | new |
+| Exercises | Worked problems w/ step reveals + AI hint | new |
+| Mock Exams | Full timed past-paper simulations w/ grading rubric | new |
+
+Each item shows: difficulty, est. time, last attempt, mastery %.
+
+New data files: `src/data/exercises.ts`, `src/data/mock-exams.ts`. Existing `decks.ts` stays.
+
+## 4. Library (replaces Smart Notes)
+
+`/app/library` — browse Uniflow-authored material by course → chapter → lesson.
+
+- Reuse `src/data/notes.ts` as **lessons** (rename concept, keep data shape).
+- Read-only reader view: clean typography, chapter ToC sidebar, "Practice this chapter" CTA at the end (links into the Practice hub filtered to that chapter), "Ask the tutor about this" button (opens AI Tutor with context preloaded).
+- Delete the contentEditable editor + AI writing side-panel from `app.notes.$noteId.tsx` — keep only the reader, backlinks, and the two action CTAs.
+
+## 5. Dashboard redesign (`/app/index.tsx`)
+
+Current page has ~6 stacked widgets. New layout — **3 zones, generous whitespace, institutional minimalism**:
+
+```text
+┌─────────────────────────────────────────────────────────┐
+│  Greeting + today's date            [Exam in 12 days ▸] │  ← thin status strip
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│   ZONE 1  — "Your next 90 minutes"                      │
+│   One large card: the single recommended action         │
+│   (e.g. "Review 24 cards · EC22 ch.4")  [Start ▸]      │
+│                                                         │
+├──────────────────────────┬──────────────────────────────┤
+│ ZONE 2 — Today's plan    │  ZONE 3 — Readiness          │
+│ 3 timeboxed blocks       │  Per-course readiness rings  │
+│ (lesson · practice · review)│  + 1-line weakest topic   │
+└──────────────────────────┴──────────────────────────────┘
 ```
-src/components/
-  app/CommandPalette.tsx
-  app/widgets/NextActionCard.tsx
-  app/widgets/ExamCountdownStrip.tsx
-  app/widgets/RecallQueueCard.tsx
-  app/widgets/TodayPlanCard.tsx
-  app/widgets/ReadinessRing.tsx
-  app/widgets/WeakTopicRadar.tsx
-  app/flashcards/ReviewSession.tsx
-  app/flashcards/Flashcard.tsx
-  app/notes/NoteEditor.tsx
-  app/notes/AISidePanel.tsx
-  app/tutor/ThreadList.tsx
-  app/tutor/MessageThread.tsx
-  charts/Sparkline.tsx
-  charts/CountUp.tsx
-  ui/skeleton-card.tsx
-  ui/theme-toggle.tsx
-  marketing/ProductTour.tsx
-  marketing/PricingTable.tsx
-  admin/widgets/AtRiskTable.tsx
-```
 
-## Mock data
+What gets cut from the current dashboard: the standalone KPI stat row, the "recent notes" list, the duplicate sparklines (already in sidebar).
 
-Create `src/data/` with `courses.ts`, `notes.ts`, `decks.ts`, `exams.ts`, `tutor-threads.ts`, `admin.ts`. All UI reads from these so swapping to real fetches later is trivial.
+## 6. Marketing alignment
 
-## Technical details
+- Hero subhead: emphasize **"curated by your faculty + Uniflow"** rather than "your notes, smarter".
+- `FeatureGrid`: replace the "Smart Notes" tile with **"Practice that mirrors the exam"** (exercises + mock exams).
+- Pricing: clarify that institutions license per-student; individual tier disabled or labeled "Coming soon".
 
-- **Theme tokens**: `src/styles.css` gains `.dark` with shifted oklch lightness (`--background` ≈ `oklch(0.16 0.02 264)`, `--card` slightly lighter, primary kept saturated). All components already use semantic tokens, so no component edits needed.
-- **Command palette**: `cmdk` is shipped with shadcn `command.tsx`. Global keyboard listener registered in `app.tsx` via `useEffect`.
-- **Motion**: `framer-motion` already installed. Centralize variants in `src/lib/motion.ts`.
-- **Editor**: plain `contentEditable` div with basic markdown shortcuts — no heavyweight editor lib. Keep it visual.
-- **Tutor streaming**: simulate token-by-token append via `setInterval` over a canned response string.
-- **Sparkline**: SVG `<polyline>`, no chart lib needed.
-- **SEO**: every new route gets distinct `head()` with title/description/og.
+## 7. Visual polish pass (lightweight, no library swaps)
 
-## Out of scope
+- Tighter dashboard rhythm: one type scale up for the "next action", smaller everything else.
+- Replace the loud `Crown` upgrade card in the sidebar with a quieter "Institution: ESCP · contact support" footer block (since the student isn't the buyer).
+- Mute the primary color on non-CTA surfaces; reserve it for the single "Start" action per screen.
+- Add an empty-state pattern for Practice tabs (engraved icon + one-line explainer + CTA).
 
-- Auth, Lovable Cloud, persistence
-- Real AI calls (all tutor/summarize responses are canned)
-- Real file upload in onboarding (preview UI only)
-- Mobile-first polish — desktop-first per brief
+---
 
-## Order of build
+## Technical section
 
-1. Tokens + dark mode + motion lib + skeleton + sparkline
-2. Command palette + dashboard redesign + sidebar/topbar polish
-3. SRS flashcards + Notes editor + Course detail
-4. Exam Prep + AI Tutor rebuild + Onboarding
-5. Admin at-risk + cohort + exports
-6. Marketing: product tour + pricing + resources
+**Routes to delete**
+- `src/routes/app.notes.tsx`
+- `src/routes/app.notes.$noteId.tsx`
 
-Click **Implement plan** to build.
+**Routes to add**
+- `src/routes/app.library.tsx` (course → chapter index)
+- `src/routes/app.library.$code.tsx` (chapter list for a course)
+- `src/routes/app.library.$code.$lessonId.tsx` (reader)
+- `src/routes/app.practice.tsx` (tabs layout)
+- `src/routes/app.practice.flashcards.tsx` + `.flashcards.$deckId.tsx` (move existing quiz route)
+- `src/routes/app.practice.quizzes.tsx`
+- `src/routes/app.practice.exercises.tsx`
+- `src/routes/app.practice.mock-exams.tsx`
+
+**Routes to edit**
+- `src/routes/app.index.tsx` — 3-zone redesign
+- `src/components/app/AppSidebar.tsx` — new nav + remove upgrade card
+- `src/components/app/CommandPalette.tsx` — remove "Smart Notes" and "Create" group
+- `src/components/app/AppTopbar.tsx` — update label map
+- `src/components/marketing/FeatureGrid.tsx`, `Hero.tsx` — repositioning copy
+- `src/routeTree.gen.ts` is auto-generated — don't touch
+
+**Data**
+- Keep `notes.ts` (rename concept to "lessons" in UI only), `decks.ts`, `courses.ts`, `exams.ts`.
+- Add `src/data/exercises.ts`, `src/data/mock-exams.ts`, `src/data/quizzes.ts`.
+
+**Out of scope**
+- Backend / Lovable Cloud / real auth
+- Real content authoring tools (Uniflow team would use a separate CMS)
+- Mobile layout pass
+
+---
+
+## Open questions before I build
+
+1. **Library reader**: keep the AI side-panel as a **read-only "explain this passage"** helper, or remove it entirely and route all AI through `/app/tutor`?
+2. **Practice hub**: single page with tabs, or four separate pages in the sidebar under a "Practice" group?
+3. **Mock exams**: should they be timed with a forced submit (proctor-like), or self-paced?
+
+I'll default to: (1) keep as read-only explainer, (2) single page with tabs, (3) timed with pause allowed — unless you say otherwise.

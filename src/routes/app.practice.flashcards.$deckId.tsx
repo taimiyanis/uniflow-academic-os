@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import { decks } from "@/data/decks";
 
-export const Route = createFileRoute("/app/quizzes/$deckId")({
+export const Route = createFileRoute("/app/practice/flashcards/$deckId")({
   head: () => ({ meta: [{ title: "Review session — Uniflow" }] }),
   component: ReviewSession,
 });
@@ -30,7 +30,6 @@ function ReviewSession() {
     if (index + 1 >= deck.cards.length) setDone(true);
     else { setIndex(index + 1); setFlipped(false); }
   };
-
   const reset = () => { setIndex(0); setFlipped(false); setDone(false); };
 
   if (done) {
@@ -43,7 +42,7 @@ function ReviewSession() {
           <button onClick={reset} className="inline-flex items-center gap-2 px-4 py-2.5 bg-primary text-primary-foreground font-semibold text-sm rounded-lg">
             <RotateCcw className="size-4" /> Review again
           </button>
-          <Link to="/app/quizzes" className="px-4 py-2.5 border border-border font-semibold text-sm rounded-lg">All decks</Link>
+          <Link to="/app/practice" className="px-4 py-2.5 border border-border font-semibold text-sm rounded-lg">Back to practice</Link>
         </div>
       </div>
     );
@@ -52,8 +51,8 @@ function ReviewSession() {
   return (
     <div className="max-w-3xl mx-auto">
       <header className="mb-8">
-        <Link to="/app/quizzes" className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-primary mb-3">
-          <ArrowLeft className="size-3" /> All decks
+        <Link to="/app/practice" className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-widest text-muted-foreground hover:text-primary mb-3">
+          <ArrowLeft className="size-3" /> Practice
         </Link>
         <div className="flex items-end justify-between">
           <div>
@@ -95,7 +94,7 @@ function ReviewSession() {
         </div>
       ) : (
         <button onClick={() => setFlipped(true)} className="w-full py-3 bg-foreground text-background rounded-lg font-semibold text-sm">
-          Show answer (space)
+          Show answer
         </button>
       )}
     </div>

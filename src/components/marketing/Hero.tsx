@@ -10,11 +10,11 @@ export function Hero() {
           The Academic Operating System
         </div>
         <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-balance leading-[1.02] mb-7">
-          Academic clarity<br />for modern students.
+          The curated workspace<br />for business school.
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground text-pretty max-w-2xl mx-auto mb-9 leading-relaxed">
-          Everything you need for business school in one high-performance interface.
-          Smart notes, AI tutoring, exam preparation, and institutional analytics — calm by design.
+          A library of lessons authored with your faculty, practice that mirrors the exam,
+          and an AI tutor grounded in your syllabus — calm by design.
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link

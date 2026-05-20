@@ -4,12 +4,12 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const labels: Record<string, string> = {
   "/app": "Dashboard",
-  "/app/notes": "Smart Notes",
+  "/app/library": "Library",
+  "/app/practice": "Practice",
   "/app/tutor": "AI Tutor",
-  "/app/quizzes": "Quizzes & Flashcards",
   "/app/planner": "Planner",
   "/app/focus": "Focus Mode",
-  "/app/analytics": "Performance Analytics",
+  "/app/analytics": "Progress",
   "/app/exam": "Exam Prep",
 };
 
@@ -17,8 +17,8 @@ export function AppTopbar({ onOpenPalette }: { onOpenPalette: () => void }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   let label = labels[pathname] ?? "Workspace";
   if (pathname.startsWith("/app/courses/")) label = "Course";
-  else if (pathname.startsWith("/app/notes/")) label = "Note";
-  else if (pathname.startsWith("/app/quizzes/")) label = "Review session";
+  else if (pathname.startsWith("/app/library/")) label = "Lesson";
+  else if (pathname.startsWith("/app/practice/flashcards/")) label = "Review session";
   else if (pathname.startsWith("/app/exam/")) label = "Exam plan";
 
   return (
@@ -34,7 +34,7 @@ export function AppTopbar({ onOpenPalette }: { onOpenPalette: () => void }) {
           className="w-full h-9 px-3 flex items-center gap-2.5 bg-secondary/60 border border-border rounded-lg text-sm text-muted-foreground hover:bg-secondary/80 transition-colors"
         >
           <Search className="size-4" />
-          <span className="flex-1 text-left">Search notes, courses, decks...</span>
+          <span className="flex-1 text-left">Search lessons, courses, decks...</span>
           <kbd className="text-[10px] font-mono px-1.5 py-0.5 bg-card border border-border rounded">⌘K</kbd>
         </button>
       </div>
