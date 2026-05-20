@@ -36,7 +36,7 @@ function PricingPage() {
           {tiers.map((t) => (
             <div key={t.name} className={`p-8 rounded-3xl border ${t.featured ? "bg-foreground text-background border-foreground shadow-[var(--shadow-elegant)]" : "bg-card border-border"}`}>
               <p className={`text-[10px] font-mono uppercase tracking-widest mb-4 ${t.featured ? "text-primary" : "text-muted-foreground"}`}>{t.name}</p>
-              <p className="text-4xl font-extrabold tracking-tight">{t.price}<span className={`text-base font-medium ml-1 ${t.featured ? "text-background/60" : "text-muted-foreground"}`}>{t.suffix ?? ""}</span></p>
+              <p className="text-4xl font-extrabold tracking-tight">{t.price}</p>
               <p className={`text-sm mt-2 ${t.featured ? "text-background/70" : "text-muted-foreground"}`}>{t.desc}</p>
               <Link to="/app" className={`mt-6 w-full block text-center py-2.5 rounded-lg font-semibold text-sm ${t.featured ? "bg-primary text-primary-foreground" : t.disabled ? "border border-border text-muted-foreground pointer-events-none" : "border border-border hover:bg-secondary/60"}`}>{t.cta}</Link>
               <ul className="mt-8 space-y-3">

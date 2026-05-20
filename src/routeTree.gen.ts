@@ -20,7 +20,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AppTutorRouteImport } from './routes/app.tutor'
+import { Route as AppPracticeRouteImport } from './routes/app.practice'
 import { Route as AppPlannerRouteImport } from './routes/app.planner'
+import { Route as AppLibraryRouteImport } from './routes/app.library'
 import { Route as AppFocusRouteImport } from './routes/app.focus'
 import { Route as AppExamRouteImport } from './routes/app.exam'
 import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
@@ -29,9 +31,12 @@ import { Route as AdminContentRouteImport } from './routes/admin.content'
 import { Route as AdminAtriskRouteImport } from './routes/admin.atrisk'
 import { Route as AdminAdoptionRouteImport } from './routes/admin.adoption'
 import { Route as AppExamIndexRouteImport } from './routes/app.exam.index'
+import { Route as AppLibraryCodeRouteImport } from './routes/app.library.$code'
 import { Route as AppExamExamIdRouteImport } from './routes/app.exam.$examId'
 import { Route as AppCoursesCodeRouteImport } from './routes/app.courses.$code'
 import { Route as AdminCohortFacultyIdRouteImport } from './routes/admin.cohort.$facultyId'
+import { Route as AppPracticeFlashcardsDeckIdRouteImport } from './routes/app.practice.flashcards.$deckId'
+import { Route as AppLibraryCodeLessonIdRouteImport } from './routes/app.library.$code.$lessonId'
 
 const ResourcesRoute = ResourcesRouteImport.update({
   id: '/resources',
@@ -88,9 +93,19 @@ const AppTutorRoute = AppTutorRouteImport.update({
   path: '/tutor',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPracticeRoute = AppPracticeRouteImport.update({
+  id: '/practice',
+  path: '/practice',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPlannerRoute = AppPlannerRouteImport.update({
   id: '/planner',
   path: '/planner',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppLibraryRoute = AppLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
   getParentRoute: () => AppRoute,
 } as any)
 const AppFocusRoute = AppFocusRouteImport.update({
@@ -133,6 +148,11 @@ const AppExamIndexRoute = AppExamIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppExamRoute,
 } as any)
+const AppLibraryCodeRoute = AppLibraryCodeRouteImport.update({
+  id: '/$code',
+  path: '/$code',
+  getParentRoute: () => AppLibraryRoute,
+} as any)
 const AppExamExamIdRoute = AppExamExamIdRouteImport.update({
   id: '/$examId',
   path: '/$examId',
@@ -147,6 +167,17 @@ const AdminCohortFacultyIdRoute = AdminCohortFacultyIdRouteImport.update({
   id: '/cohort/$facultyId',
   path: '/cohort/$facultyId',
   getParentRoute: () => AdminRoute,
+} as any)
+const AppPracticeFlashcardsDeckIdRoute =
+  AppPracticeFlashcardsDeckIdRouteImport.update({
+    id: '/flashcards/$deckId',
+    path: '/flashcards/$deckId',
+    getParentRoute: () => AppPracticeRoute,
+  } as any)
+const AppLibraryCodeLessonIdRoute = AppLibraryCodeLessonIdRouteImport.update({
+  id: '/$lessonId',
+  path: '/$lessonId',
+  getParentRoute: () => AppLibraryCodeRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -165,14 +196,19 @@ export interface FileRoutesByFullPath {
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/exam': typeof AppExamRouteWithChildren
   '/app/focus': typeof AppFocusRoute
+  '/app/library': typeof AppLibraryRouteWithChildren
   '/app/planner': typeof AppPlannerRoute
+  '/app/practice': typeof AppPracticeRouteWithChildren
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/admin/cohort/$facultyId': typeof AdminCohortFacultyIdRoute
   '/app/courses/$code': typeof AppCoursesCodeRoute
   '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/library/$code': typeof AppLibraryCodeRouteWithChildren
   '/app/exam/': typeof AppExamIndexRoute
+  '/app/library/$code/$lessonId': typeof AppLibraryCodeLessonIdRoute
+  '/app/practice/flashcards/$deckId': typeof AppPracticeFlashcardsDeckIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -187,14 +223,19 @@ export interface FileRoutesByTo {
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/focus': typeof AppFocusRoute
+  '/app/library': typeof AppLibraryRouteWithChildren
   '/app/planner': typeof AppPlannerRoute
+  '/app/practice': typeof AppPracticeRouteWithChildren
   '/app/tutor': typeof AppTutorRoute
   '/admin': typeof AdminIndexRoute
   '/app': typeof AppIndexRoute
   '/admin/cohort/$facultyId': typeof AdminCohortFacultyIdRoute
   '/app/courses/$code': typeof AppCoursesCodeRoute
   '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/library/$code': typeof AppLibraryCodeRouteWithChildren
   '/app/exam': typeof AppExamIndexRoute
+  '/app/library/$code/$lessonId': typeof AppLibraryCodeLessonIdRoute
+  '/app/practice/flashcards/$deckId': typeof AppPracticeFlashcardsDeckIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -213,14 +254,19 @@ export interface FileRoutesById {
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/exam': typeof AppExamRouteWithChildren
   '/app/focus': typeof AppFocusRoute
+  '/app/library': typeof AppLibraryRouteWithChildren
   '/app/planner': typeof AppPlannerRoute
+  '/app/practice': typeof AppPracticeRouteWithChildren
   '/app/tutor': typeof AppTutorRoute
   '/admin/': typeof AdminIndexRoute
   '/app/': typeof AppIndexRoute
   '/admin/cohort/$facultyId': typeof AdminCohortFacultyIdRoute
   '/app/courses/$code': typeof AppCoursesCodeRoute
   '/app/exam/$examId': typeof AppExamExamIdRoute
+  '/app/library/$code': typeof AppLibraryCodeRouteWithChildren
   '/app/exam/': typeof AppExamIndexRoute
+  '/app/library/$code/$lessonId': typeof AppLibraryCodeLessonIdRoute
+  '/app/practice/flashcards/$deckId': typeof AppPracticeFlashcardsDeckIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -240,14 +286,19 @@ export interface FileRouteTypes {
     | '/app/analytics'
     | '/app/exam'
     | '/app/focus'
+    | '/app/library'
     | '/app/planner'
+    | '/app/practice'
     | '/app/tutor'
     | '/admin/'
     | '/app/'
     | '/admin/cohort/$facultyId'
     | '/app/courses/$code'
     | '/app/exam/$examId'
+    | '/app/library/$code'
     | '/app/exam/'
+    | '/app/library/$code/$lessonId'
+    | '/app/practice/flashcards/$deckId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -262,14 +313,19 @@ export interface FileRouteTypes {
     | '/admin/engagement'
     | '/app/analytics'
     | '/app/focus'
+    | '/app/library'
     | '/app/planner'
+    | '/app/practice'
     | '/app/tutor'
     | '/admin'
     | '/app'
     | '/admin/cohort/$facultyId'
     | '/app/courses/$code'
     | '/app/exam/$examId'
+    | '/app/library/$code'
     | '/app/exam'
+    | '/app/library/$code/$lessonId'
+    | '/app/practice/flashcards/$deckId'
   id:
     | '__root__'
     | '/'
@@ -287,14 +343,19 @@ export interface FileRouteTypes {
     | '/app/analytics'
     | '/app/exam'
     | '/app/focus'
+    | '/app/library'
     | '/app/planner'
+    | '/app/practice'
     | '/app/tutor'
     | '/admin/'
     | '/app/'
     | '/admin/cohort/$facultyId'
     | '/app/courses/$code'
     | '/app/exam/$examId'
+    | '/app/library/$code'
     | '/app/exam/'
+    | '/app/library/$code/$lessonId'
+    | '/app/practice/flashcards/$deckId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -387,11 +448,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTutorRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/practice': {
+      id: '/app/practice'
+      path: '/practice'
+      fullPath: '/app/practice'
+      preLoaderRoute: typeof AppPracticeRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/planner': {
       id: '/app/planner'
       path: '/planner'
       fullPath: '/app/planner'
       preLoaderRoute: typeof AppPlannerRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/library': {
+      id: '/app/library'
+      path: '/library'
+      fullPath: '/app/library'
+      preLoaderRoute: typeof AppLibraryRouteImport
       parentRoute: typeof AppRoute
     }
     '/app/focus': {
@@ -450,6 +525,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppExamIndexRouteImport
       parentRoute: typeof AppExamRoute
     }
+    '/app/library/$code': {
+      id: '/app/library/$code'
+      path: '/$code'
+      fullPath: '/app/library/$code'
+      preLoaderRoute: typeof AppLibraryCodeRouteImport
+      parentRoute: typeof AppLibraryRoute
+    }
     '/app/exam/$examId': {
       id: '/app/exam/$examId'
       path: '/$examId'
@@ -470,6 +552,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/cohort/$facultyId'
       preLoaderRoute: typeof AdminCohortFacultyIdRouteImport
       parentRoute: typeof AdminRoute
+    }
+    '/app/practice/flashcards/$deckId': {
+      id: '/app/practice/flashcards/$deckId'
+      path: '/flashcards/$deckId'
+      fullPath: '/app/practice/flashcards/$deckId'
+      preLoaderRoute: typeof AppPracticeFlashcardsDeckIdRouteImport
+      parentRoute: typeof AppPracticeRoute
+    }
+    '/app/library/$code/$lessonId': {
+      id: '/app/library/$code/$lessonId'
+      path: '/$lessonId'
+      fullPath: '/app/library/$code/$lessonId'
+      preLoaderRoute: typeof AppLibraryCodeLessonIdRouteImport
+      parentRoute: typeof AppLibraryCodeRoute
     }
   }
 }
@@ -507,11 +603,49 @@ const AppExamRouteChildren: AppExamRouteChildren = {
 const AppExamRouteWithChildren =
   AppExamRoute._addFileChildren(AppExamRouteChildren)
 
+interface AppLibraryCodeRouteChildren {
+  AppLibraryCodeLessonIdRoute: typeof AppLibraryCodeLessonIdRoute
+}
+
+const AppLibraryCodeRouteChildren: AppLibraryCodeRouteChildren = {
+  AppLibraryCodeLessonIdRoute: AppLibraryCodeLessonIdRoute,
+}
+
+const AppLibraryCodeRouteWithChildren = AppLibraryCodeRoute._addFileChildren(
+  AppLibraryCodeRouteChildren,
+)
+
+interface AppLibraryRouteChildren {
+  AppLibraryCodeRoute: typeof AppLibraryCodeRouteWithChildren
+}
+
+const AppLibraryRouteChildren: AppLibraryRouteChildren = {
+  AppLibraryCodeRoute: AppLibraryCodeRouteWithChildren,
+}
+
+const AppLibraryRouteWithChildren = AppLibraryRoute._addFileChildren(
+  AppLibraryRouteChildren,
+)
+
+interface AppPracticeRouteChildren {
+  AppPracticeFlashcardsDeckIdRoute: typeof AppPracticeFlashcardsDeckIdRoute
+}
+
+const AppPracticeRouteChildren: AppPracticeRouteChildren = {
+  AppPracticeFlashcardsDeckIdRoute: AppPracticeFlashcardsDeckIdRoute,
+}
+
+const AppPracticeRouteWithChildren = AppPracticeRoute._addFileChildren(
+  AppPracticeRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAnalyticsRoute: typeof AppAnalyticsRoute
   AppExamRoute: typeof AppExamRouteWithChildren
   AppFocusRoute: typeof AppFocusRoute
+  AppLibraryRoute: typeof AppLibraryRouteWithChildren
   AppPlannerRoute: typeof AppPlannerRoute
+  AppPracticeRoute: typeof AppPracticeRouteWithChildren
   AppTutorRoute: typeof AppTutorRoute
   AppIndexRoute: typeof AppIndexRoute
   AppCoursesCodeRoute: typeof AppCoursesCodeRoute
@@ -521,7 +655,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppAnalyticsRoute: AppAnalyticsRoute,
   AppExamRoute: AppExamRouteWithChildren,
   AppFocusRoute: AppFocusRoute,
+  AppLibraryRoute: AppLibraryRouteWithChildren,
   AppPlannerRoute: AppPlannerRoute,
+  AppPracticeRoute: AppPracticeRouteWithChildren,
   AppTutorRoute: AppTutorRoute,
   AppIndexRoute: AppIndexRoute,
   AppCoursesCodeRoute: AppCoursesCodeRoute,
