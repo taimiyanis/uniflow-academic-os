@@ -5,6 +5,11 @@ import { Sparkles, Send, Plus, FileText, Layers, CalendarPlus, BookOpen } from "
 import { tutorThreads, type TutorMessage } from "@/data/tutor";
 
 export const Route = createFileRoute("/app/tutor")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    lesson: typeof search.lesson === "string" ? search.lesson : undefined,
+    code: typeof search.code === "string" ? search.code : undefined,
+    topic: typeof search.topic === "string" ? search.topic : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "AI Tutor — Uniflow" },

@@ -50,11 +50,10 @@ function DashboardHome() {
               </p>
               <div className="flex flex-wrap items-center gap-3">
                 <Link
-                  to="/app/practice/flashcards/$deckId"
-                  params={{ deckId: decks[0].id }}
+                  to="/app/review"
                   className="inline-flex items-center gap-2 px-5 py-3 bg-primary text-primary-foreground font-semibold text-sm rounded-lg shadow-[var(--shadow-primary)]"
                 >
-                  <Play className="size-4 fill-current" /> Start session
+                  <Play className="size-4 fill-current" /> Start review · {recallDue} due
                 </Link>
                 <Link
                   to="/app/tutor"
