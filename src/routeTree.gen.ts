@@ -27,7 +27,9 @@ import { Route as AppFocusRouteImport } from './routes/app.focus'
 import { Route as AppExamRouteImport } from './routes/app.exam'
 import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
 import { Route as AdminEngagementRouteImport } from './routes/admin.engagement'
+import { Route as AdminContentHealthRouteImport } from './routes/admin.content-health'
 import { Route as AdminContentRouteImport } from './routes/admin.content'
+import { Route as AdminCompareRouteImport } from './routes/admin.compare'
 import { Route as AdminAtriskRouteImport } from './routes/admin.atrisk'
 import { Route as AdminAdoptionRouteImport } from './routes/admin.adoption'
 import { Route as AppExamIndexRouteImport } from './routes/app.exam.index'
@@ -128,9 +130,19 @@ const AdminEngagementRoute = AdminEngagementRouteImport.update({
   path: '/engagement',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminContentHealthRoute = AdminContentHealthRouteImport.update({
+  id: '/content-health',
+  path: '/content-health',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminContentRoute = AdminContentRouteImport.update({
   id: '/content',
   path: '/content',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminCompareRoute = AdminCompareRouteImport.update({
+  id: '/compare',
+  path: '/compare',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAtriskRoute = AdminAtriskRouteImport.update({
@@ -191,7 +203,9 @@ export interface FileRoutesByFullPath {
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
   '/admin/atrisk': typeof AdminAtriskRoute
+  '/admin/compare': typeof AdminCompareRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/content-health': typeof AdminContentHealthRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/exam': typeof AppExamRouteWithChildren
@@ -219,7 +233,9 @@ export interface FileRoutesByTo {
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
   '/admin/atrisk': typeof AdminAtriskRoute
+  '/admin/compare': typeof AdminCompareRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/content-health': typeof AdminContentHealthRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/focus': typeof AppFocusRoute
@@ -249,7 +265,9 @@ export interface FileRoutesById {
   '/resources': typeof ResourcesRoute
   '/admin/adoption': typeof AdminAdoptionRoute
   '/admin/atrisk': typeof AdminAtriskRoute
+  '/admin/compare': typeof AdminCompareRoute
   '/admin/content': typeof AdminContentRoute
+  '/admin/content-health': typeof AdminContentHealthRoute
   '/admin/engagement': typeof AdminEngagementRoute
   '/app/analytics': typeof AppAnalyticsRoute
   '/app/exam': typeof AppExamRouteWithChildren
@@ -281,7 +299,9 @@ export interface FileRouteTypes {
     | '/resources'
     | '/admin/adoption'
     | '/admin/atrisk'
+    | '/admin/compare'
     | '/admin/content'
+    | '/admin/content-health'
     | '/admin/engagement'
     | '/app/analytics'
     | '/app/exam'
@@ -309,7 +329,9 @@ export interface FileRouteTypes {
     | '/resources'
     | '/admin/adoption'
     | '/admin/atrisk'
+    | '/admin/compare'
     | '/admin/content'
+    | '/admin/content-health'
     | '/admin/engagement'
     | '/app/analytics'
     | '/app/focus'
@@ -338,7 +360,9 @@ export interface FileRouteTypes {
     | '/resources'
     | '/admin/adoption'
     | '/admin/atrisk'
+    | '/admin/compare'
     | '/admin/content'
+    | '/admin/content-health'
     | '/admin/engagement'
     | '/app/analytics'
     | '/app/exam'
@@ -497,11 +521,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminEngagementRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/content-health': {
+      id: '/admin/content-health'
+      path: '/content-health'
+      fullPath: '/admin/content-health'
+      preLoaderRoute: typeof AdminContentHealthRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/content': {
       id: '/admin/content'
       path: '/content'
       fullPath: '/admin/content'
       preLoaderRoute: typeof AdminContentRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/compare': {
+      id: '/admin/compare'
+      path: '/compare'
+      fullPath: '/admin/compare'
+      preLoaderRoute: typeof AdminCompareRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/atrisk': {
@@ -573,7 +611,9 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminAdoptionRoute: typeof AdminAdoptionRoute
   AdminAtriskRoute: typeof AdminAtriskRoute
+  AdminCompareRoute: typeof AdminCompareRoute
   AdminContentRoute: typeof AdminContentRoute
+  AdminContentHealthRoute: typeof AdminContentHealthRoute
   AdminEngagementRoute: typeof AdminEngagementRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminCohortFacultyIdRoute: typeof AdminCohortFacultyIdRoute
@@ -582,7 +622,9 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAdoptionRoute: AdminAdoptionRoute,
   AdminAtriskRoute: AdminAtriskRoute,
+  AdminCompareRoute: AdminCompareRoute,
   AdminContentRoute: AdminContentRoute,
+  AdminContentHealthRoute: AdminContentHealthRoute,
   AdminEngagementRoute: AdminEngagementRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminCohortFacultyIdRoute: AdminCohortFacultyIdRoute,
