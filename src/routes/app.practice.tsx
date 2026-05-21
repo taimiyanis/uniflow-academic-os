@@ -219,9 +219,9 @@ function Mocks() {
             ))}
           </div>
 
-          <button className="mt-5 w-full inline-flex items-center justify-center gap-2 py-2.5 text-xs font-bold bg-foreground text-background rounded-lg hover:bg-foreground/90">
+          <Link to="/app/practice/mock-exams/$id/run" params={{ id: m.id }} className="mt-5 w-full inline-flex items-center justify-center gap-2 py-2.5 text-xs font-bold bg-foreground text-background rounded-lg hover:bg-foreground/90">
             <Timer className="size-3.5" /> Start timed mock
-          </button>
+          </Link>
         </div>
       ))}
     </div>

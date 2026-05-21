@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, Activity, ShieldCheck, TrendingUp, ArrowLeft, AlertTriangle } from "lucide-react";
+import { LayoutDashboard, Users, Activity, ShieldCheck, TrendingUp, ArrowLeft, AlertTriangle, ArrowLeftRight, HeartPulse } from "lucide-react";
 import { UniflowLogo } from "@/components/brand/UniflowLogo";
 
 const items = [
@@ -7,6 +7,8 @@ const items = [
   { to: "/admin/engagement", label: "Engagement", icon: Activity },
   { to: "/admin/adoption", label: "Adoption", icon: TrendingUp },
   { to: "/admin/atrisk", label: "At-risk", icon: AlertTriangle },
+  { to: "/admin/compare", label: "Compare", icon: ArrowLeftRight },
+  { to: "/admin/content-health", label: "Content health", icon: HeartPulse },
   { to: "/admin/content", label: "Content", icon: ShieldCheck },
 ];
 

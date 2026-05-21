@@ -1,12 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Download } from "lucide-react";
-import { faculties } from "@/data/admin";
+import { ChevronRight, Download, TrendingUp, TrendingDown } from "lucide-react";
+import { faculties, cohortMetrics } from "@/data/admin";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/adoption")({
   head: () => ({ meta: [{ title: "Adoption — Uniflow Institutional" }] }),
   component: AdoptionPage,
 });
+
+function YoYChip({ delta }: { delta: number }) {
+  const positive = delta >= 0;
+  return (
+    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase tracking-widest ${
+      positive ? "bg-primary-soft text-primary" : "bg-destructive/10 text-destructive"
+    }`}>
+      {positive ? <TrendingUp className="size-2.5" /> : <TrendingDown className="size-2.5" />}
+      {positive ? "+" : ""}{delta}% YoY
+    </span>
+  );
+}
 
 const months = ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"];
 const series = {
@@ -73,7 +85,9 @@ function AdoptionPage() {
           </div>
         </div>
         <ul className="space-y-2">
-          {faculties.map((f) => (
+          {faculties.map((f) => {
+            const m = cohortMetrics[f.id];
+            return (
             <li key={f.id}>
               <Link
                 to="/admin/cohort/$facultyId"
@@ -81,8 +95,11 @@ function AdoptionPage() {
                 className="flex items-center gap-4 p-4 border border-border rounded-xl hover:bg-secondary/30 hover:border-primary/30 transition-colors group"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm">{f.name}</p>
-                  <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{f.students.toLocaleString()} students · {f.atRisk} at-risk</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold text-sm">{f.name}</p>
+                    {m && <YoYChip delta={m.yoyAdoption} />}
+                  </div>
+                  <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mt-1">{f.students.toLocaleString()} students · {f.atRisk} at-risk</p>
                 </div>
                 <div className="w-48">
                   <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-1">
@@ -95,7 +112,8 @@ function AdoptionPage() {
                 <ChevronRight className="size-4 text-muted-foreground group-hover:text-primary" />
               </Link>
             </li>
-          ))}
+            );
+          })}
         </ul>
       </div>
     </div>

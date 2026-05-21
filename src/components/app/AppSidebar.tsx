@@ -2,7 +2,7 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import {
   LayoutDashboard, Library, Dumbbell, Sparkles, CalendarRange,
-  Focus, BarChart3, GraduationCap, BookOpen, Building2,
+  Focus, BarChart3, GraduationCap, BookOpen, Building2, RefreshCw,
 } from "lucide-react";
 import { UniflowLogo } from "@/components/brand/UniflowLogo";
 import { Sparkline } from "@/components/charts/Sparkline";
@@ -10,6 +10,7 @@ import { courses } from "@/data/courses";
 
 const items = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/app/review", label: "Today's review", icon: RefreshCw },
   { to: "/app/library", label: "Library", icon: Library },
   { to: "/app/practice", label: "Practice", icon: Dumbbell },
   { to: "/app/exam", label: "Exam Prep", icon: GraduationCap },
