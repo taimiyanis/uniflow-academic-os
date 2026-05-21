@@ -1,12 +1,24 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ChevronRight, Download } from "lucide-react";
-import { faculties } from "@/data/admin";
+import { ChevronRight, Download, TrendingUp, TrendingDown } from "lucide-react";
+import { faculties, cohortMetrics } from "@/data/admin";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/adoption")({
   head: () => ({ meta: [{ title: "Adoption — Uniflow Institutional" }] }),
   component: AdoptionPage,
 });
+
+function YoYChip({ delta }: { delta: number }) {
+  const positive = delta >= 0;
+  return (
+    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-mono uppercase tracking-widest ${
+      positive ? "bg-primary-soft text-primary" : "bg-destructive/10 text-destructive"
+    }`}>
+      {positive ? <TrendingUp className="size-2.5" /> : <TrendingDown className="size-2.5" />}
+      {positive ? "+" : ""}{delta}% YoY
+    </span>
+  );
+}
 
 const months = ["Sep", "Oct", "Nov", "Dec", "Jan", "Feb", "Mar", "Apr", "May"];
 const series = {
