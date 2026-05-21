@@ -1,137 +1,145 @@
 
-# Repositioning Uniflow: from "student notebook" to "curated academic library"
+# UNIFLOW — full feature upgrade plan
 
-The current product treats the student as the author (Smart Notes editor, AI side-panel for writing, backlinks). That contradicts the real model: **the university licenses Uniflow, and Uniflow's team authors the course material**. The student consumes, practices, and gets coached — they don't write notes from scratch.
-
-This plan deletes what doesn't fit, restructures navigation around the real value (Library → Practice → Coach → Progress), and rebuilds a calmer, more focused dashboard.
+Sequenced in 4 phases. Admin upgrades ship first (your priority), then student-side power features, then polish, then nice-to-haves. Everything stays in the current TanStack Start + mock-data architecture — no backend yet.
 
 ---
 
-## 1. Remove / retire
+## Phase 1 — Admin upgrades (ship first)
 
-- **Smart Notes top-level section** → delete from sidebar, command palette, marketing.
-  - Delete `src/routes/app.notes.tsx`, `src/routes/app.notes.$noteId.tsx`.
-  - Remove `NotebookPen` items from `AppSidebar`, `CommandPalette`, `AppTopbar` labels.
-  - Remove the "Smart Notes" feature card from the marketing `FeatureGrid` / Hero copy.
-- **The "create" shortcuts** in the command palette ("New note", "New flashcard deck") — students don't author content, so these go.
-- **Dashboard clutter** — the current `/app` mixes too many widgets. Cut from ~6 cards to a 3-zone layout (see §4).
+Goal: make the institutional side feel like a real decision-making tool, not just dashboards.
 
-## 2. Rename & restructure the sidebar
+### 1.1 Cohort comparison
+Side-by-side compare of two faculties/programs on readiness, engagement, at-risk %, content coverage.
+- New route: `src/routes/admin.compare.tsx` with two faculty pickers and a diff table + paired sparklines.
+- Data: extend `src/data/admin.ts` with `cohortMetrics` (deterministic per facultyId).
 
-New "Workspace" nav (top to bottom):
+### 1.2 Content health dashboard
+"Which lessons are hurting students?" — lessons sorted by lowest quiz pass rate, highest drop-off, most "ask tutor" hits. Action: flag for review (toast).
+- New route: `src/routes/admin.content-health.tsx`.
+- Data: add `contentSignals` to `admin.ts` joining `notes.ts` + `quizzes.ts`.
 
-```text
-Dashboard          — today's plan, exam countdown, next action
-Library            — courses with Uniflow-authored lessons/readings (replaces "Smart Notes")
-Practice           — flashcards, quizzes, exercises, mock exams (single hub)
-Exam Prep          — per-exam readiness, weak topics, plan
-AI Tutor           — conversational coach grounded in the Library
-Planner            — calendar + study blocks
-Focus              — pomodoro / deep work
-Progress           — analytics (renamed from "Analytics" to feel less corporate)
-```
+### 1.3 Intervention workflow
+Turn the existing at-risk list into a queue: assign advisor, log outreach note, mark resolved. Local state only.
+- Edit `src/routes/admin.atrisk.tsx`: add row drawer with status (`new` → `contacted` → `resolved`), advisor select, note textarea.
+- Persist to `localStorage` under `uniflow.interventions`.
 
-Courses list stays below as a quick-jump section.
+### 1.4 Admin polish
+- Adoption page: add YoY delta chips.
+- Sidebar: add Compare + Content Health entries to `AdminSidebar`.
+- Global export button (CSV) in admin topbar — already wired via sonner toast, generalize it.
 
-## 3. New "Practice" hub (replaces standalone `/app/quizzes`)
+---
 
-Single page at `/app/practice` with four tabs powered by Uniflow-authored content:
+## Phase 2 — Student-side core (Tier 1)
 
-| Tab | Content type | Existing scaffold to reuse |
-|---|---|---|
-| Flashcards | SRS decks per chapter | `app.quizzes.$deckId.tsx` (rename route to `practice.flashcards.$deckId`) |
-| Quizzes | Timed MCQ sets | new |
-| Exercises | Worked problems w/ step reveals + AI hint | new |
-| Mock Exams | Full timed past-paper simulations w/ grading rubric | new |
+### 2.1 Per-exam readiness model
+Single 0–100 score per exam = `0.4*coverage + 0.3*recall + 0.3*practice`.
+- New `src/lib/readiness.ts` pure selectors over `courses.ts` / `decks.ts` / `mock-exams.ts`.
+- Surface: big number on `app.exam.$examId.tsx`, replace ring values on Dashboard zone 3.
 
-Each item shows: difficulty, est. time, last attempt, mastery %.
+### 2.2 Mock exam runtime
+Make mock exams runnable end-to-end.
+- New routes: `app.practice.mock-exams.$id.run.tsx` (timer, section nav, flag, submit) and `app.practice.mock-exams.$id.result.tsx` (score, section breakdown, weakest topics → links into Library/Practice).
+- Extend `mock-exams.ts` with a `questions` array (reuse `QuizQuestion` shape).
+- Store attempts in `localStorage` → feeds `lastScore` + readiness.
 
-New data files: `src/data/exercises.ts`, `src/data/mock-exams.ts`. Existing `decks.ts` stays.
+### 2.3 Unified review queue
+A single "Due today" inbox merging due flashcards, missed quiz items, and exercises flagged for review.
+- New `src/data/review-queue.ts` derived selector.
+- New route `src/routes/app.review.tsx` — single-card focused UI, ⌘+Enter to grade.
+- Dashboard "Next 90 minutes" card primary action becomes "Review N items".
 
-## 4. Library (replaces Smart Notes)
+### 2.4 Adaptive study plan
+"Plan my week" modal: hours/week + which exams → generates day-by-day blocks.
+- New: `src/lib/plan-generator.ts` (deterministic), modal in `app.planner.tsx`.
+- Output written to `localStorage`, read by Dashboard zone 2 and Planner calendar.
 
-`/app/library` — browse Uniflow-authored material by course → chapter → lesson.
+### 2.5 Tutor grounded in current lesson
+"Ask the tutor about this" button (already in `app.library.$code.$lessonId.tsx`) → opens Tutor with a pinned context pill + 3 suggested questions.
+- Edit `app.tutor.tsx` to read `?lesson=…&code=…` search params; canned response references the passage.
 
-- Reuse `src/data/notes.ts` as **lessons** (rename concept, keep data shape).
-- Read-only reader view: clean typography, chapter ToC sidebar, "Practice this chapter" CTA at the end (links into the Practice hub filtered to that chapter), "Ask the tutor about this" button (opens AI Tutor with context preloaded).
-- Delete the contentEditable editor + AI writing side-panel from `app.notes.$noteId.tsx` — keep only the reader, backlinks, and the two action CTAs.
+---
 
-## 5. Dashboard redesign (`/app/index.tsx`)
+## Phase 3 — Polish & engagement (Tier 2)
 
-Current page has ~6 stacked widgets. New layout — **3 zones, generous whitespace, institutional minimalism**:
+### 3.1 Highlight + bookmark in Library reader
+Selection-based highlights stored in `localStorage`, listed in a side drawer per lesson. Read-only — lesson body stays Uniflow's.
 
-```text
-┌─────────────────────────────────────────────────────────┐
-│  Greeting + today's date            [Exam in 12 days ▸] │  ← thin status strip
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│   ZONE 1  — "Your next 90 minutes"                      │
-│   One large card: the single recommended action         │
-│   (e.g. "Review 24 cards · EC22 ch.4")  [Start ▸]      │
-│                                                         │
-├──────────────────────────┬──────────────────────────────┤
-│ ZONE 2 — Today's plan    │  ZONE 3 — Readiness          │
-│ 3 timeboxed blocks       │  Per-course readiness rings  │
-│ (lesson · practice · review)│  + 1-line weakest topic   │
-└──────────────────────────┴──────────────────────────────┘
-```
+### 3.2 Library full-text search in ⌘K
+Extend `CommandPalette.tsx` to fuzzy-match lesson bodies (not just titles) with snippet preview.
 
-What gets cut from the current dashboard: the standalone KPI stat row, the "recent notes" list, the duplicate sparklines (already in sidebar).
+### 3.3 Keyboard-first practice UI
+Standardize shortcuts across Flashcards / Quizzes / Exercises: `Space` flip, `1-4` grade, `J/K` nav, `?` shows overlay.
 
-## 6. Marketing alignment
+### 3.4 Quiet streak
+Topbar pill: "4 / 5 study days". No fireworks. Derived from review-queue completions in `localStorage`.
 
-- Hero subhead: emphasize **"curated by your faculty + Uniflow"** rather than "your notes, smarter".
-- `FeatureGrid`: replace the "Smart Notes" tile with **"Practice that mirrors the exam"** (exercises + mock exams).
-- Pricing: clarify that institutions license per-student; individual tier disabled or labeled "Coming soon".
+### 3.5 Printable study sheet
+Per chapter: `/app/library/$code/$lessonId/print` route with a print stylesheet — definitions + 10 questions on one page.
 
-## 7. Visual polish pass (lightweight, no library swaps)
+---
 
-- Tighter dashboard rhythm: one type scale up for the "next action", smaller everything else.
-- Replace the loud `Crown` upgrade card in the sidebar with a quieter "Institution: ESCP · contact support" footer block (since the student isn't the buyer).
-- Mute the primary color on non-CTA surfaces; reserve it for the single "Start" action per screen.
-- Add an empty-state pattern for Practice tabs (engraved icon + one-line explainer + CTA).
+## Phase 4 — Nice-to-haves (Tier 4)
+
+- Focus mode ↔ Planner: starting a pomodoro tied to a block auto-marks it on complete.
+- Dark mode audit (rings, sparklines, charts).
+- Onboarding completion checklist card on Dashboard for first 7 days.
+- `.ics` calendar export for generated study plan (client-side blob).
 
 ---
 
 ## Technical section
 
-**Routes to delete**
-- `src/routes/app.notes.tsx`
-- `src/routes/app.notes.$noteId.tsx`
+**New files**
+```text
+src/lib/readiness.ts
+src/lib/plan-generator.ts
+src/lib/storage.ts                # typed localStorage helpers
+src/data/review-queue.ts
+src/routes/admin.compare.tsx
+src/routes/admin.content-health.tsx
+src/routes/app.review.tsx
+src/routes/app.practice.mock-exams.$id.run.tsx
+src/routes/app.practice.mock-exams.$id.result.tsx
+src/routes/app.library.$code.$lessonId.print.tsx
+src/components/admin/CompareTable.tsx
+src/components/admin/InterventionDrawer.tsx
+src/components/app/PlanWizard.tsx
+src/components/app/HighlightDrawer.tsx
+src/components/app/ReadinessScore.tsx
+```
 
-**Routes to add**
-- `src/routes/app.library.tsx` (course → chapter index)
-- `src/routes/app.library.$code.tsx` (chapter list for a course)
-- `src/routes/app.library.$code.$lessonId.tsx` (reader)
-- `src/routes/app.practice.tsx` (tabs layout)
-- `src/routes/app.practice.flashcards.tsx` + `.flashcards.$deckId.tsx` (move existing quiz route)
-- `src/routes/app.practice.quizzes.tsx`
-- `src/routes/app.practice.exercises.tsx`
-- `src/routes/app.practice.mock-exams.tsx`
+**Edited files**
+```text
+src/components/admin/AdminSidebar.tsx
+src/components/app/AppSidebar.tsx       # add "Review" entry
+src/components/app/AppTopbar.tsx        # quiet streak pill
+src/components/app/CommandPalette.tsx   # full-text search
+src/routes/admin.atrisk.tsx             # intervention drawer
+src/routes/admin.adoption.tsx           # YoY chips
+src/routes/app.index.tsx                # readiness + plan blocks + review CTA
+src/routes/app.exam.$examId.tsx         # big readiness number
+src/routes/app.tutor.tsx                # grounded context
+src/routes/app.library.$code.$lessonId.tsx  # highlights + print link
+src/routes/app.planner.tsx              # plan wizard
+src/data/mock-exams.ts                  # add questions
+src/data/admin.ts                       # cohortMetrics + contentSignals
+```
 
-**Routes to edit**
-- `src/routes/app.index.tsx` — 3-zone redesign
-- `src/components/app/AppSidebar.tsx` — new nav + remove upgrade card
-- `src/components/app/CommandPalette.tsx` — remove "Smart Notes" and "Create" group
-- `src/components/app/AppTopbar.tsx` — update label map
-- `src/components/marketing/FeatureGrid.tsx`, `Hero.tsx` — repositioning copy
-- `src/routeTree.gen.ts` is auto-generated — don't touch
-
-**Data**
-- Keep `notes.ts` (rename concept to "lessons" in UI only), `decks.ts`, `courses.ts`, `exams.ts`.
-- Add `src/data/exercises.ts`, `src/data/mock-exams.ts`, `src/data/quizzes.ts`.
+**Architectural notes**
+- All persistence is `localStorage` via a typed `src/lib/storage.ts` wrapper (single source of truth for keys: `uniflow.interventions`, `uniflow.plan`, `uniflow.attempts`, `uniflow.highlights`, `uniflow.streak`). Swappable for Lovable Cloud later.
+- Readiness + review-queue are **pure derived selectors** — no duplicated state.
+- No new dependencies needed. Reuse `framer-motion`, `sonner`, `lucide-react`, shadcn primitives already in the project.
+- Mock exam timer uses `useEffect` interval + `Date.now()` deadline; resilient to tab blur.
+- Keep design tokens — no raw color classes.
 
 **Out of scope**
-- Backend / Lovable Cloud / real auth
-- Real content authoring tools (Uniflow team would use a separate CMS)
-- Mobile layout pass
+- Real backend / auth / Lovable Cloud.
+- Real AI streaming (tutor stays canned-mock with the new grounding).
+- Mobile-first redesign (responsive only).
+- Real CMS for Uniflow content authors.
 
----
+**Sequencing**
+Phase 1 → Phase 2 → Phase 3 → Phase 4, each phase shippable on its own. I'll pause after each phase so you can review before continuing.
 
-## Open questions before I build
-
-1. **Library reader**: keep the AI side-panel as a **read-only "explain this passage"** helper, or remove it entirely and route all AI through `/app/tutor`?
-2. **Practice hub**: single page with tabs, or four separate pages in the sidebar under a "Practice" group?
-3. **Mock exams**: should they be timed with a forced submit (proctor-like), or self-paced?
-
-I'll default to: (1) keep as read-only explainer, (2) single page with tabs, (3) timed with pause allowed — unless you say otherwise.
